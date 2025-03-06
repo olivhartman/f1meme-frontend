@@ -1,7 +1,20 @@
+@import "tailwindcss/preflight";
+@tailwind utilities;
+@import "tailwindcss";
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  font-size: 16px; /* Base font size */
+  
+  /* Responsive font sizing */
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -24,22 +37,24 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  display: block;
   min-height: 100vh;
+  min-width: 320px; /* Minimum width to prevent squishing */
+  background-color: #111111;
+  color: #9CA3AF;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); /* For notched devices */
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: clamp(2rem, 5vw, 3.2em); /* Responsive font sizing */
   line-height: 1.1;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  padding: clamp(0.4em, 2vw, 0.6em) clamp(0.8em, 3vw, 1.2em); /* Responsive padding */
+  font-size: clamp(0.875rem, 2vw, 1rem); /* Responsive font size */
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
@@ -47,7 +62,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #aeb913;
 }
 button:focus,
 button:focus-visible {
@@ -66,3 +81,199 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  animation: marquee 30s linear infinite;
+  white-space: nowrap;
+  width: max-content; /* Ensures content doesn't wrap */
+  
+  /* Responsive speeds for different screen sizes */
+  @media (max-width: 768px) {
+    animation-duration: 20s;
+  }
+  @media (max-width: 480px) {
+    animation-duration: 15s;
+  }
+}
+
+/* Container for the marquee to hide overflow */
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Optional: Pause animation on hover */
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-size: 200% 100%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 100%;
+    background-position: right center;
+  }
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-25%);
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 15s ease infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+
+.hover\:pause:hover {
+  animation-play-state: paused;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Add a grid background image to your public folder */
+/* grid.png should be a subtle dot pattern or grid lines */
+
+/* Responsive animation adjustments */
+@media (max-width: 768px) {
+  .animate-bounce-slow {
+    animation-duration: 2s;
+  }
+  
+  .animate-gradient-x {
+    animation-duration: 10s;
+  }
+}
+
+/* Add responsive container width */
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+/* Breakpoint-specific container sizes */
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+/* Ensure touch targets are large enough on mobile */
+@media (max-width: 768px) {
+  button,
+  a {
+    min-height: 44px; /* Apple's recommended minimum */
+    min-width: 44px;
+  }
+}
+
+/* Prevent text from becoming too small on mobile */
+@media (max-width: 480px) {
+  * {
+    -webkit-text-size-adjust: 100%;
+  }
+}
+
+/* Add better support for foldable devices */
+@media (spanning: single-fold-vertical) {
+  body {
+    flex-direction: row;
+  }
+}
+
+/* Improve performance on mobile devices */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Reduce motion if user prefers */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Add styles for racing cars */
+@keyframes race {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+.racing-car {
+  position: absolute;
+  font-size: 4rem;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure content is above the background elements */
+main,
+header,
+footer {
+  position: relative;
+  z-index: 10;
+}
+
+
