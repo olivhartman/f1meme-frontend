@@ -2,7 +2,7 @@ import type React from "react"
 
 const Loader: React.FC = () => {
   return (
-    <div className="flex justify-center items-center h-64">
+    <div className="fixed inset-0 flex justify-center items-center">
       <div className="relative">
         <div
           className="w-12 h-12 rounded-full absolute

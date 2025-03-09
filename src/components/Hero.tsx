@@ -242,7 +242,7 @@ export default function Hero() {
   }
 
   return (
-    <div className="min-h-screen pt-24 text-white font-sans relative">
+    <div className="min-h-screen pt-16 sm:pt-24 text-white font-sans relative">
       {/* Background Video Container */}
       <div className="fixed inset-0 w-full h-full z-0 overflow-hidden">
         <div 
@@ -253,9 +253,9 @@ export default function Hero() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '177.77777778vh', // 16:9 aspect ratio
             minWidth: '100%',
             minHeight: '100%',
+            width: '177.77777778vh', // 16:9 aspect ratio
             height: '56.25vw' // 16:9 aspect ratio
           }}
         />
@@ -290,16 +290,16 @@ export default function Hero() {
 
       <div className="container mx-auto px-4 py-2 max-w-7xl">
         {/* Hero Section */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-16 lg:mb-24">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center mb-8 sm:mb-16 lg:mb-24">
           {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-12 relative z-10"
+            className="space-y-8 sm:space-y-12 relative z-10"
           >
             <div>
-              <h1 className="text-6xl lg:text-8xl font-extrabold text-white tracking-tight leading-none mb-6 bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent">
+              <h1 className="text-4xl sm:text-6xl lg:text-8xl font-extrabold text-white tracking-tight leading-none mb-4 sm:mb-6 bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent">
                 NEXT RACE
               </h1>
               <div className="flex items-center gap-4">

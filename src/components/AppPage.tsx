@@ -80,12 +80,11 @@ export default function Home() {
         <BackgroundElements />
 
         <main className="relative z-10">
-
-          <section id="hero">
+          <section id="hero" className="mb-8 sm:mb-16">
             <Hero />
           </section>
 
-          <div className="relative z-10 border-t-2 border-yellow-500/50 py-8 mt-16" />
+          <div className="relative z-10 border-t-2 border-yellow-500/50 py-4 sm:py-8 mt-8 sm:mt-16" />
 
           <section id="interface" className="backdrop-blur-xs">
             <div className="container mx-auto px-4">
@@ -127,9 +126,9 @@ export default function Home() {
           {/* <div className="w-full border-t-2 border-yellow-500/50 my-8" /> */}
         </main>
 
-        <footer className="relative z-10 border-t-2 border-yellow-500/50 py-8 mt-16">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col items-center gap-6">
+        <footer className="relative z-10 border-t-2 border-yellow-500/50 py-4 sm:py-8 mt-8 sm:mt-16">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="flex flex-col items-center gap-4 sm:gap-6">
               <div className="flex flex-col md:flex-row justify-between items-center w-full gap-4">
                 
                 <div className="flex gap-6 justify-center items-center w-full">

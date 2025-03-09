@@ -596,10 +596,10 @@ const BoxBoxInterface: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen text-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
-        <div className="bg-[#24252d] rounded-t-xl p-3 sm:p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 shadow-lg">
-          <h3 className="text-xl sm:text-2xl font-bold text-yellow-500 mx-1">BoxBox Premium</h3>
+        <div className="bg-[#24252d] rounded-t-xl p-3 sm:p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+          <h3 className="text-xl sm:text-2xl font-bold text-yellow-500">BoxBox Premium</h3>
           <div className="flex items-center w-full sm:w-auto justify-center sm:justify-end">
-            <WalletMultiButton className="w-full sm:w-auto p-2 sm:p-0 !bg-yellow-500 !text-black hover:!bg-yellow-400 !transition-colors !rounded-md" />
+            <WalletMultiButton className="w-full sm:w-auto" />
           </div>
         </div>
 
@@ -661,7 +661,7 @@ const BoxBoxInterface: React.FC = () => {
                 </div>
 
                 {/* Lock Tokens Section */}
-                <div className="space-y-4 bg-[#1a1b23] p-4 sm:p-6 rounded-lg">
+                <div className="space-y-4 bg-[#1a1b23] p-4 sm:p-6 rounded-lg mt-6">
                   <div>
                     <label htmlFor="amountToLock" className="block text-sm font-medium text-gray-400 mb-3">
                       Amount to Lock (BOXBOX)
@@ -720,7 +720,7 @@ const BoxBoxInterface: React.FC = () => {
                 {/* Active Locks Section */}
                 <div className="space-y-4">
                   <h3 className="text-lg sm:text-xl font-semibold">Active Locks</h3>
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {locks.filter((lock) => lock.isLocked).length === 0 ? (
                       <p className="text-gray-400 col-span-full">There are no active locks.</p>
                     ) : (

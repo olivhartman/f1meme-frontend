@@ -62,17 +62,17 @@ export default function Faqs() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="container mx-auto px-4 sm:px-6 py-8 max-w-5xl">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-16 relative z-10"
+        className="text-center mb-8 sm:mb-16 relative z-10"
       >
-        <h2 className="text-5xl font-bold text-yellow-500 mb-4">FAQ</h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
-          Frequently Asked Questions about BOXBOX token and the F1 Meme ecosystem
+        <h2 className="text-4xl sm:text-5xl font-bold text-yellow-500 mb-4">FAQ</h2>
+        <p className="text-gray-400 max-w-2xl mx-auto px-4">
+          Frequently Asked Questions
         </p>
       </motion.div>
 
@@ -81,7 +81,7 @@ export default function Faqs() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-100px" }}
-        className="space-y-4"
+        className="space-y-3 sm:space-y-4"
       >
         {faqs.map((faq, index) => (
           <motion.div key={index} variants={item} className="overflow-hidden">
