@@ -366,20 +366,19 @@ export default function Hero() {
               </CardContent>
             </Card>
 
-            {/* BoxBox dApp Banner */}
+            {/* Phantom Wallet Banner */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
               className="mt-8"
             >
-              {/* F1 Community Banner */}
               <Card className="bg-black/40 backdrop-blur-sm border-white/10 overflow-hidden group hover:border-yellow-500/50 transition-all duration-300 h-[400px]">
                 <CardContent className="p-8 flex flex-col justify-between h-full relative">
                   <div className="absolute inset-0">
                     <img 
                       src="/assets/images/banner2.jpg" 
-                      alt="F1 Community Banner"
+                      alt="Phantom Wallet Banner"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
                     />
@@ -387,15 +386,27 @@ export default function Hero() {
                   </div>
                   
                   <div className="relative space-y-2">
-                    <h3 className="text-3xl font-bold text-white">Join the F1 Community</h3>
-                    <p className="text-lg text-gray-200">Connect with fellow F1 enthusiasts</p>
+                    <h3 className="text-3xl font-bold text-white">Get Started with Phantom</h3>
                   </div>
                   
-                  <Button 
-                    className="relative w-full bg-yellow-500 text-black hover:bg-yellow-400 font-bold text-lg py-6"
-                  >
-                    Join Now <ChevronRight className="ml-2 h-5 w-5" />
-                  </Button>
+                  <div className="relative flex gap-4">
+                    <a href="https://apps.apple.com/app/phantom-solana-wallet/id1598432977" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       className="flex-1">
+                      <Button className="w-full bg-yellow-500 text-black hover:bg-yellow-400 font-bold text-lg py-6">
+                        App Store
+                      </Button>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=app.phantom" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       className="flex-1">
+                      <Button className="w-full bg-yellow-500 text-black hover:bg-yellow-400 font-bold text-lg py-6">
+                        Play Store
+                      </Button>
+                    </a>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>

@@ -597,7 +597,7 @@ const BoxBoxInterface: React.FC = () => {
     <div className="flex flex-col items-center justify-start min-h-screen text-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="bg-[#24252d] rounded-t-xl p-3 sm:p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 shadow-lg">
-          <h3 className="text-xl sm:text-2xl font-bold text-yellow-500 mx-1">BoxBox Vesting</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-yellow-500 mx-1">BoxBox Premium</h3>
           <div className="flex items-center w-full sm:w-auto justify-center sm:justify-end">
             <WalletMultiButton className="w-full sm:w-auto p-2 sm:p-0 !bg-yellow-500 !text-black hover:!bg-yellow-400 !transition-colors !rounded-md" />
           </div>
@@ -640,7 +640,7 @@ const BoxBoxInterface: React.FC = () => {
                     </span>
                   </div>
                   <div className="bg-[#1a1b23] p-4 rounded-lg relative">
-                    <span className="text-gray-400 text-sm flex items-center">
+                    <span className="text-gray-400 text-sm">
                       Vault
                       <i
                         className="fas fa-info-circle text-blue-400 ml-1 cursor-pointer"

@@ -85,7 +85,7 @@ export default function Faqs() {
       >
         {faqs.map((faq, index) => (
           <motion.div key={index} variants={item} className="overflow-hidden">
-            <Card className="bg-black/40 backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 rounded-xl overflow-hidden">
+            <Card className="bg-[#00000066] backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 rounded-xl overflow-hidden">
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 className="w-full text-left p-6 hover:bg-yellow-500/5 transition-colors duration-200 focus:outline-none"
@@ -150,7 +150,7 @@ export default function Faqs() {
                 href="#"
                 className="px-6 py-3 bg-black/40 hover:bg-black/60 text-white rounded-full transition-colors duration-300 flex items-center gap-2"
               >
-                <span>Discord</span>
+                <span>Youtube</span>
               </a>
             </div>
           </CardContent>

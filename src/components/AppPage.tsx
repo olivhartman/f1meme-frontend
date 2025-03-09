@@ -92,7 +92,7 @@ export default function Home() {
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                   <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent mb-4 py-3">
-                    BoxBox Vesting Portal
+                    BoxBox Web3 Memebership
                   </h2>
                   <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                     Lock your BOXBOX tokens to participate in the F1 community and earn rewards.
@@ -131,21 +131,24 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="flex flex-col items-center gap-6">
               <div className="flex flex-col md:flex-row justify-between items-center w-full gap-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-2xl">🏎️</span>
-                  <span className="font-bold text-yellow-500">BOXBOX</span>
-                </div>
                 
-                <div className="flex gap-6 justify-center w-full">
-                  <a href="https://x.com/F1memeBoxbox" className="text-gray-400 hover:text-yellow-500 transition-colors">
-                    <Twitter size={20} />
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors">
-                    <Send size={20} />
-                  </a>
-                  <a href="https://solscan.io/token/A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y" className="text-gray-400 hover:text-yellow-500 transition-colors">
-                    Solscan
-                  </a>
+                <div className="flex gap-6 justify-center items-center w-full">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🏎️</span>
+                    <span className="font-bold text-yellow-500">BOXBOX</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <a href="https://x.com/F1memeBoxbox" className="text-gray-400 hover:text-yellow-500 transition-colors">
+                      <Twitter size={20} />
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors">
+                      <Send size={20} />
+                    </a>
+                    <a href="https://solscan.io/token/A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y" className="text-gray-400 hover:text-yellow-500 transition-colors">
+                      Solscan
+                    </a>
+                  </div>
                 </div>
               </div>
 
