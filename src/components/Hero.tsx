@@ -268,21 +268,23 @@ export default function Hero() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-md border-b border-yellow-500/20 py-5 overflow-hidden z-30"
+        className="fixed-marquee-header bg-black/40 backdrop-blur-md border-b border-yellow-500/20 z-30"
       >
-        <div className="flex justify-between items-center px-4">
-          <div className="relative flex-1 overflow-hidden">
-            <div className="animate-marquee whitespace-nowrap flex">
-              {newsItems.map((item, index) => (
-                <span key={index} className="mx-8 text-sm font-bold tracking-wider text-gray-300">
-                  {item}
-                </span>
-              ))}
-              {newsItems.map((item, index) => (
-                <span key={`duplicate-${index}`} className="mx-8 text-sm font-bold tracking-wider text-gray-300">
-                  {item}
-                </span>
-              ))}
+        <div className="flex justify-between items-center px-4 w-full">
+          <div className="marquee-container">
+            <div className="animate-marquee">
+              <div className="marquee-content">
+                {newsItems.map((item, index) => (
+                  <span key={index} className="mx-8 text-sm font-bold tracking-wider text-gray-300">
+                    {item}
+                  </span>
+                ))}
+                {newsItems.map((item, index) => (
+                  <span key={`duplicate-${index}`} className="mx-8 text-sm font-bold tracking-wider text-gray-300">
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

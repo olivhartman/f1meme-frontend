@@ -110,22 +110,52 @@ button:focus-visible {
   display: flex;
   animation: marquee 30s linear infinite;
   white-space: nowrap;
-  width: max-content; /* Ensures content doesn't wrap */
+  width: max-content;
+  height: 100%; /* Ensure full height */
   
   /* Responsive speeds for different screen sizes */
   @media (max-width: 768px) {
     animation-duration: 20s;
+    min-height: 24px; /* Minimum height for mobile */
   }
   @media (max-width: 480px) {
     animation-duration: 15s;
   }
 }
 
-/* Container for the marquee to hide overflow */
+/* Update marquee container styles */
 .marquee-container {
   width: 100%;
   overflow: hidden;
   position: relative;
+  height: 100%; /* Ensure full height */
+}
+
+/* Add styles for the fixed marquee header */
+.fixed-marquee-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto; /* Allow natural height */
+  min-height: 40px; /* Minimum height to ensure content is visible */
+  display: flex;
+  align-items: center;
+  transform: translateZ(0); /* Force GPU acceleration */
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  
+  @media (max-width: 768px) {
+    min-height: 32px; /* Slightly smaller on mobile */
+  }
+}
+
+/* Ensure content inside marquee is vertically centered */
+.marquee-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 /* Optional: Pause animation on hover */
@@ -193,8 +223,8 @@ button:focus-visible {
   width: 100%;
   margin-right: auto;
   margin-left: auto;
-  padding-right: 1rem;
-  padding-left: 1rem;
+  /* padding-right: 1rem;
+  padding-left: 1rem; */
 }
 
 /* Breakpoint-specific container sizes */
