@@ -596,20 +596,20 @@ const BoxBoxInterface: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen text-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
-        <div className="bg-[#24252d] rounded-t-xl p-3 sm:p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+        <div className="rounded-t-xl p-3 sm:p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
           <h3 className="text-xl sm:text-2xl font-bold text-yellow-500">BoxBox Premium</h3>
           <div className="flex items-center w-full sm:w-auto justify-center sm:justify-end">
             <WalletMultiButton className="w-full sm:w-auto" />
           </div>
         </div>
 
-        {/* Messages - improved spacing for mobile */}
+        {/* Remove bg-[#24252d] from messages */}
         {messages.map((message, index) => (
           <div
             key={index}
             className={`px-3 sm:px-4 py-2 flex justify-between items-center mb-3 sm:mb-4 ${
-              message.type === "error" ? "bg-red-600" : message.type === "info" ? "bg-blue-600" : "bg-green-600"
-            } rounded-md`}
+              message.type === "error" ? "bg-red-600/50" : message.type === "info" ? "bg-blue-600/50" : "bg-green-600/50"
+            } backdrop-blur-sm rounded-md`}
           >
             <p className="text-sm sm:text-base">{message.text}</p>
             <button
@@ -622,24 +622,24 @@ const BoxBoxInterface: React.FC = () => {
         ))}
 
         {wallet && (
-          <div className="bg-[#24252d] rounded-b-xl shadow-lg w-full overflow-hidden">
+          <div className="rounded-b-xl shadow-lg w-full overflow-hidden">
             <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               <div className="space-y-4">
                 <LevelDisplay level={userLevel} />
                 
                 {/* Stats Grid - 2 columns on mobile, 3 on larger screens */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="bg-[#1a1b23] p-4 rounded-lg">
+                  <div className="backdrop-blur-sm bg-black/20 p-4 rounded-lg">
                     <span className="text-gray-400 text-sm">Token Balance</span>
                     <span className="text-lg sm:text-xl font-semibold block mt-1">{tokenBalance} BOXBOX</span>
                   </div>
-                  <div className="bg-[#1a1b23] p-4 rounded-lg">
+                  <div className="backdrop-blur-sm bg-black/20 p-4 rounded-lg">
                     <span className="text-gray-400 text-sm">Membership Account</span>
                     <span className="text-base sm:text-lg font-semibold block mt-1">
                       {isMembershipInitialized ? "Created" : "Yet to be created"}
                     </span>
                   </div>
-                  <div className="bg-[#1a1b23] p-4 rounded-lg relative">
+                  <div className="backdrop-blur-sm bg-black/20 p-4 rounded-lg relative">
                     <span className="text-gray-400 text-sm">
                       Vault
                       <i

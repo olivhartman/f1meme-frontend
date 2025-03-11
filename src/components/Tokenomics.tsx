@@ -64,13 +64,8 @@ export default function Tokenomics() {
       </motion.div>
 
       <div className="grid md:grid-cols-1 gap-8 lg:gap-16 items-start max-w-2xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="bg-gray-800/80 backdrop-blur-sm border-gray-700 hover:border-yellow-500/20 transition-all duration-500">
+        <motion.div>
+          <Card className="backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300">
             <CardContent className="p-6 sm:p-8">
               <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">Token details</h3>
 
@@ -85,8 +80,8 @@ export default function Tokenomics() {
                   variants={item}
                   className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden"
                 >
-                  <div className="text-gray-400 p-3 bg-gray-800/50">Address</div>
-                  <div className="group flex items-center text-white font-mono break-all p-3 bg-gray-800/30">
+                  <div className="text-gray-400 p-3 backdrop-blur-sm bg-black/20">Address</div>
+                  <div className="group flex items-center text-white font-mono break-all p-3 backdrop-blur-sm bg-black/10">
                     {tokenDetails.address}
                     <button
                       onClick={() => copyToClipboard("A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y")}

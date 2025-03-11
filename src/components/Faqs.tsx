@@ -85,10 +85,10 @@ export default function Faqs() {
       >
         {faqs.map((faq, index) => (
           <motion.div key={index} variants={item} className="overflow-hidden">
-            <Card className="bg-[#00000066] backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 rounded-xl overflow-hidden">
+            <Card className="backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 rounded-xl overflow-hidden">
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="bg-[#00000066] w-full text-left p-6 hover:bg-yellow-500/5 transition-colors duration-200 focus:outline-none"
+                className="w-full text-left p-6 hover:bg-yellow-500/5 transition-colors duration-200 focus:outline-none"
               >
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-semibold text-yellow-400">{faq.question}</h3>
@@ -120,14 +120,8 @@ export default function Faqs() {
         ))}
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.5 }}
-        className="mt-16 text-center"
-      >
-        <Card className="bg-gradient-to-r from-yellow-500/20 to-yellow-500/5 backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 max-w-2xl mx-auto">
+      <motion.div className="mt-16 text-center">
+        <Card className="backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 max-w-2xl mx-auto">
           <CardContent className="p-8">
             <h3 className="text-2xl font-bold text-white mb-4">Still have questions?</h3>
             <p className="text-gray-300 mb-6">
