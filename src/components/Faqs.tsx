@@ -88,7 +88,7 @@ export default function Faqs() {
             <Card className="bg-[#00000066] backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 rounded-xl overflow-hidden">
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full text-left p-6 hover:bg-yellow-500/5 transition-colors duration-200 focus:outline-none"
+                className="bg-[#00000066] w-full text-left p-6 hover:bg-yellow-500/5 transition-colors duration-200 focus:outline-none"
               >
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-semibold text-yellow-400">{faq.question}</h3>

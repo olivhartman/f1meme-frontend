@@ -1,4 +1,6 @@
 "use client"
+import * as buffer from "buffer";
+window.Buffer = buffer.Buffer;
 
 import type React from "react"
 import { useState, useEffect } from "react"
@@ -10,8 +12,6 @@ import idl from "../idl/boxbox.json"
 import type { Boxbox } from "../types/boxbox"
 import BN from "bn.js"
 import { LockIcon, UnlockIcon, ExternalLinkIcon, XIcon } from "lucide-react"
-import * as buffer from "buffer";
-window.Buffer = buffer.Buffer;
 
 // interface MembershipAccount {
 //   owner: PublicKey

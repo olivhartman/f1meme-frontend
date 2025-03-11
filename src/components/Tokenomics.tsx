@@ -17,11 +17,11 @@ interface TokenDetails {
 
 const tokenDetails: TokenDetails = {
   address: "A5D4sQ...TNJB8y",
-  totalSupply: "136,000,000,000",
+  totalSupply: "135,829,261,759.33",
   burnt: "1,029,000",
   name: "F1 Meme",
   symbol: "BOXBOX",
-  price: "$0.0000006",
+  price: "$0.064807",
 }
 
 export default function Tokenomics() {
@@ -49,21 +49,21 @@ export default function Tokenomics() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+    <div className="container mx-auto px-4 max-w-7xl">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-8 sm:mb-16"
+        className="text-center mb-16"
       >
-        <h2 className="text-4xl sm:text-5xl font-bold text-yellow-500 mb-4">Tokenomics</h2>
-        <p className="text-gray-400 max-w-2xl mx-auto px-4">
-          Discover the economic model behind BOXBOX
+        <h2 className="text-5xl font-bold text-yellow-500 mb-4">Tokenomics</h2>
+        <p className="text-gray-400 max-w-2xl mx-auto">
+          Discover the economic model behind BOXBOX, the F1 Meme token powering our ecosystem
         </p>
       </motion.div>
 
-      <div className="grid md:grid-cols-1 gap-6 sm:gap-8 lg:gap-16 items-start max-w-2xl mx-auto">
+      <div className="grid md:grid-cols-1 gap-8 lg:gap-16 items-start max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -153,4 +153,3 @@ export default function Tokenomics() {
     </div>
   )
 }
-

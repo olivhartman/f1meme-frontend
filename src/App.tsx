@@ -1,6 +1,7 @@
 import './App.css'
 import AppPage from './components/AppPage'
-
+import * as buffer from "buffer";
+window.Buffer = buffer.Buffer;
 function App() {
 
   return (

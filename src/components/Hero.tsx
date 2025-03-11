@@ -182,7 +182,7 @@ export default function Hero() {
   useEffect(() => {
     // Load the Vimeo Player API script
     const tag = document.createElement('script')
-    tag.src = 'https://player.vimeo.com/api/player.js'
+    tag.src = 'https://player.vimeo.com/acpi/player.js'
     const firstScriptTag = document.getElementsByTagName('script')[0]
     firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
 

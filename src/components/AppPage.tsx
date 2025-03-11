@@ -18,6 +18,9 @@ import Loader from "./Loader"
 
 import "@solana/wallet-adapter-react-ui/styles.css"
 
+import * as buffer from "buffer";
+window.Buffer = buffer.Buffer;
+
 // Moved outside the main component
 function WalletChangeListener() {
   const { publicKey } = useWallet()
@@ -80,14 +83,14 @@ export default function Home() {
         <BackgroundElements />
 
         <main className="relative z-10">
-          <section id="hero" className="mb-8 sm:mb-16">
+          <section id="hero" className="w-full mb-8 sm:mb-16">
             <Hero />
           </section>
 
-          <div className="relative z-10 border-t-2 border-yellow-500/50 py-4 sm:py-8 mt-8 sm:mt-16" />
+          <div className="relative z-10 w-full border-t-2 border-yellow-500/50 py-4 sm:py-8 mt-8 sm:mt-16" />
 
-          <section id="interface" className="backdrop-blur-xs">
-            <div className="container mx-auto px-1">
+          <section id="interface" className="w-full backdrop-blur-xs">
+            <div className="w-full px-1">
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                   <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent mb-4 py-3">
@@ -97,37 +100,32 @@ export default function Home() {
                     Lock your BOXBOX tokens to participate in the F1 community and earn rewards.
                   </p>
                 </div>
-                
-                {/* <div className="bg-black/40 backdrop-blur-md rounded-2xl border border-yellow-500/20 p-6 shadow-xl shadow-black/20"> */}
-                  <BoxBoxInterface />
-                {/* </div> */}
+                <BoxBoxInterface />
               </div>
             </div>
           </section>
 
-          <div className="relative z-10 border-t-2 border-yellow-500/50 py-8 mt-16" />
+          <div className="relative z-10 w-full border-t-2 border-yellow-500/50 py-8 mt-16" />
 
-          <section id="twitter-feed" className="py-16 md:py-16">
+          <section id="twitter-feed" className="w-full py-16 md:py-16">
             <TwitterFeed />
           </section>
 
-          <div className="relative z-10 border-t-2 border-yellow-500/50 py-8 mt-16" />
+          <div className="relative z-10 w-full border-t-2 border-yellow-500/50 py-8 mt-16" />
 
-          <section id="tokenomics" className="py-16 md:py-16">
+          <section id="tokenomics" className="w-full py-16 md:py-16">
             <Tokenomics />
           </section>
 
-          <div className="relative z-10 border-t-2 border-yellow-500/50 py-8 mt-16" />
+          <div className="relative z-10 w-full border-t-2 border-yellow-500/50 py-8 mt-16" />
 
-          <section id="faqs" className="py-16 md:py-16 z-100">
+          <section id="faqs" className="w-full py-16 md:py-16 z-100">
             <Faqs />
           </section>
-
-          {/* <div className="w-full border-t-2 border-yellow-500/50 my-8" /> */}
         </main>
 
-        <footer className="relative z-10 border-t-2 border-yellow-500/50 py-4 sm:py-8 mt-8 sm:mt-16">
-          <div className="container mx-auto px-4 sm:px-6">
+        <footer className="relative z-10 w-full border-t-2 border-yellow-500/50 py-4 sm:py-8 mt-8 sm:mt-16">
+          <div className="w-full px-4 sm:px-6">
             <div className="flex flex-col items-center gap-4 sm:gap-6">
               <div className="flex flex-col md:flex-row justify-between items-center w-full gap-4">
                 
