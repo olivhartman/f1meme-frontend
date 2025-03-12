@@ -68,13 +68,17 @@ export default function Home() {
     // Simulate loading process
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 2000) // Adjust this value to control how long the loader is shown
+    }, 2000)
 
     return () => clearTimeout(timer)
   }, [])
 
   if (isLoading) {
-    return <Loader />
+    return (
+      <div className="w-full min-h-screen">
+        <Loader />
+      </div>
+    )
   }
 
   return (

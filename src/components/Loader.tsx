@@ -2,14 +2,14 @@ import type React from "react"
 
 const Loader: React.FC = () => {
   return (
-    <div className="fixed inset-0 flex justify-center items-center">
-      <div className="relative">
+    <div className="fixed inset-0 w-screen h-screen flex items-center justify-center bg-black">
+      <div className="relative w-12 h-12">
         <div
-          className="w-12 h-12 rounded-full absolute
+          className="w-full h-full rounded-full absolute
                         border-4 border-solid border-gray-200"
         ></div>
         <div
-          className="w-12 h-12 rounded-full animate-spin absolute
+          className="w-full h-full rounded-full animate-spin absolute
                         border-4 border-solid border-yellow-500 border-t-transparent"
         ></div>
       </div>
