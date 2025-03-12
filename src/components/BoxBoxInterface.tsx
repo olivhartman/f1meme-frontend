@@ -594,7 +594,7 @@ const BoxBoxInterface: React.FC = () => {
   )
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen text-white">
+    <div className="flex flex-col items-center justify-start text-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="rounded-t-xl p-3 sm:p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
           <h3 className="text-xl sm:text-2xl font-bold text-yellow-500">BoxBox Premium</h3>
@@ -804,7 +804,7 @@ const BoxBoxInterface: React.FC = () => {
 
         {/* Not Connected State */}
         {!wallet && (
-          <div className="bg-[#24252d] rounded-b-xl shadow-lg w-full overflow-hidden p-6 text-center">
+          <div className="backdrop-blur-sm bg-black/20 rounded-b-xl shadow-lg w-full overflow-hidden p-6 text-center">
             <p className="text-lg sm:text-xl font-medium text-gray-300 mb-3">
               Connect your wallet to lock your BOXBOX tokens.
             </p>
