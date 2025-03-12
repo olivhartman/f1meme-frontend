@@ -3,7 +3,7 @@ import Hero from "./Hero"
 import Tokenomics from "./Tokenomics"
 import Faqs from "./Faqs"
 // import Navigation from "./navigation"
-import BackgroundElements from "./background-elements"
+// import BackgroundElements from "./background-elements"
 import { Twitter, Send } from "lucide-react"
 import TwitterFeed from "./XFeed"
 import BoxBoxInterface from "./BoxBoxInterface"
@@ -80,7 +80,7 @@ export default function Home() {
   return (
     <WalletContextWrapper>
       <div className="relative min-h-screen text-white font-sans overflow-hidden">
-        <BackgroundElements />
+        {/* <BackgroundElements /> */}
 
         <main className="relative z-10">
           <section id="hero" className="w-full mb-8 sm:mb-16">
