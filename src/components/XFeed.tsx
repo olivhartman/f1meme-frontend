@@ -20,7 +20,7 @@ const XFeed = () => {
     <div className="container mx-auto px-4 max-w-7xl">
       <div 
         className="taggbox w-full aspect-square sm:aspect-video" 
-        data-widget-id="2157566" 
+        data-widget-id="2159027" 
         data-tags="false"
         style={{
           maxHeight: '80vh',
