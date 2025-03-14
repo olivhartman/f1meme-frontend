@@ -44,6 +44,11 @@ interface SeasonInfo {
   lastRaceDate?: string
 }
 
+interface CachedData {
+  data: any;
+  timestamp: number;
+}
+
 export default function Hero() {
   const [previousRace, setPreviousRace] = useState<RaceResults>({
     raceName: "2024 Championship Standings",
@@ -113,46 +118,80 @@ export default function Hero() {
   })
 
   useEffect(() => {
+    const CACHE_KEY = 'f1_season_info';
+    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
     const fetchSeasonInfo = async () => {
       try {
-        const currentYear = new Date().getFullYear()
+        // Check cache first
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+          const { data, timestamp } = JSON.parse(cachedData) as CachedData;
+          const isExpired = Date.now() - timestamp > CACHE_DURATION;
+          
+          if (!isExpired) {
+            // Use cached data if not expired
+            setSeasonInfo(data);
+            return;
+          }
+        }
+
+        // Fetch fresh data if cache missing or expired
+        const currentYear = new Date().getFullYear();
         
         // Fetch current season's last race
-        const currentSeasonResponse = await fetch(`https://ergast.com/api/f1/${currentYear}.json`)
-        const currentSeasonData = await currentSeasonResponse.json()
-        const currentSeasonRaces = currentSeasonData.MRData.RaceTable.Races
+        const currentSeasonResponse = await fetch(`https://ergast.com/api/f1/${currentYear}.json`);
+        const currentSeasonData = await currentSeasonResponse.json();
+        const currentSeasonRaces = currentSeasonData.MRData.RaceTable.Races;
         
-        const lastRaceDate = currentSeasonRaces[currentSeasonRaces.length - 1]?.date
-        const lastRaceDateTime = lastRaceDate ? new Date(`${lastRaceDate}T00:00:00Z`) : null
-        const isSeasonFinished = lastRaceDateTime ? new Date() > lastRaceDateTime : false
+        const lastRaceDate = currentSeasonRaces[currentSeasonRaces.length - 1]?.date;
+        const lastRaceDateTime = lastRaceDate ? new Date(`${lastRaceDate}T00:00:00Z`) : null;
+        const isSeasonFinished = lastRaceDateTime ? new Date() > lastRaceDateTime : false;
+
+        let seasonInfoData;
 
         // If current season is finished, fetch next season's first race
         if (isSeasonFinished) {
-          const nextSeasonResponse = await fetch(`https://ergast.com/api/f1/${currentYear + 1}.json`)
-          const nextSeasonData = await nextSeasonResponse.json()
-          const nextSeasonRaces = nextSeasonData.MRData.RaceTable.Races
-          const nextSeasonStart = nextSeasonRaces[0]?.date
+          const nextSeasonResponse = await fetch(`https://ergast.com/api/f1/${currentYear + 1}.json`);
+          const nextSeasonData = await nextSeasonResponse.json();
+          const nextSeasonRaces = nextSeasonData.MRData.RaceTable.Races;
+          const nextSeasonStart = nextSeasonRaces[0]?.date;
 
-          setSeasonInfo({
+          seasonInfoData = {
             isActive: false,
             currentYear,
             nextSeasonStart: nextSeasonStart ? `${nextSeasonStart}T00:00:00Z` : undefined,
             lastRaceDate: lastRaceDate
-          })
+          };
         } else {
-          setSeasonInfo({
+          seasonInfoData = {
             isActive: true,
             currentYear,
             lastRaceDate: lastRaceDate
-          })
+          };
         }
-      } catch (error) {
-        console.error('Failed to fetch season info:', error)
-      }
-    }
 
-    fetchSeasonInfo()
-  }, [])
+        // Cache the new data
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          data: seasonInfoData,
+          timestamp: Date.now()
+        }));
+
+        setSeasonInfo(seasonInfoData);
+      } catch (error) {
+        console.error('Failed to fetch season info:', error);
+        
+        // On error, try to use cached data regardless of expiration
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+          const { data } = JSON.parse(cachedData) as CachedData;
+          setSeasonInfo(data);
+        }
+      }
+    };
+
+    fetchSeasonInfo();
+  }, []);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
