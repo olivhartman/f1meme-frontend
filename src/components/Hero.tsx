@@ -340,13 +340,13 @@ export default function Hero() {
             className="space-y-8 sm:space-y-12 relative z-10"
           >
             <div>
-              <h1 className="text-4xl sm:text-6xl lg:text-8xl font-extrabold text-white tracking-tight leading-none mb-4 sm:mb-6 bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent">
-                NEXT RACE
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight leading-none mb-4 sm:mb-6 bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent">
+                LATEST RACE
               </h1>
-              <div className="flex items-center gap-4">
+              {/* <div className="flex items-center gap-4">
                 <div className="h-1 w-24 bg-gradient-to-r from-yellow-500 to-yellow-300" />
                 <p className="text-xl font-light tracking-wider text-gray-300">{nextRace.circuit}</p>
-              </div>
+              </div> */}
             </div>
 
             {/* Podium Results Card */}
