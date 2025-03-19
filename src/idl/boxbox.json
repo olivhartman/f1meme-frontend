@@ -8,6 +8,62 @@
   },
   "instructions": [
     {
+      "name": "get_total_locked_tokens",
+      "discriminator": [
+        145,
+        215,
+        36,
+        85,
+        41,
+        58,
+        83,
+        240
+      ],
+      "accounts": [
+        {
+          "name": "membership_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114,
+                  115,
+                  104,
+                  105,
+                  112,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "signer": true
+        }
+      ],
+      "args": [],
+      "returns": "u64"
+    },
+    {
       "name": "initialize_escrow_account",
       "discriminator": [
         42,

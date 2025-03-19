@@ -2,8 +2,6 @@
 import Hero from "./Hero"
 import Tokenomics from "./Tokenomics"
 import Faqs from "./Faqs"
-// import Navigation from "./navigation"
-// import BackgroundElements from "./background-elements"
 import { Twitter, Send } from "lucide-react"
 import TwitterFeed from "./XFeed"
 import BoxBoxInterface from "./BoxBoxInterface"
@@ -13,7 +11,6 @@ import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
 import { PhantomWalletAdapter, SolflareWalletAdapter, TorusWalletAdapter } from "@solana/wallet-adapter-wallets"
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
 import { clusterApiUrl } from "@solana/web3.js"
-// import BoxBoxInterface from "./components/BoxBoxInterface"
 import Loader from "./Loader"
 
 import "@solana/wallet-adapter-react-ui/styles.css"
@@ -65,7 +62,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate loading process
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 2000)
@@ -98,7 +94,7 @@ export default function Home() {
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                   <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent mb-4 py-3">
-                    BoxBox Web3 Memebership
+                    BoxBox Web3 Membership
                   </h2>
                   <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                     Lock your BOXBOX tokens to participate in the F1 community and earn rewards.

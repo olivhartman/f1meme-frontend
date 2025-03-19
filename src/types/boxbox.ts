@@ -14,6 +14,62 @@ export type Boxbox = {
   },
   "instructions": [
     {
+      "name": "getTotalLockedTokens",
+      "discriminator": [
+        145,
+        215,
+        36,
+        85,
+        41,
+        58,
+        83,
+        240
+      ],
+      "accounts": [
+        {
+          "name": "membershipAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114,
+                  115,
+                  104,
+                  105,
+                  112,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "signer": true
+        }
+      ],
+      "args": [],
+      "returns": "u64"
+    },
+    {
       "name": "initializeEscrowAccount",
       "discriminator": [
         42,

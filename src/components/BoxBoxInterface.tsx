@@ -12,6 +12,8 @@ import idl from "../idl/boxbox.json"
 import type { Boxbox } from "../types/boxbox"
 import BN from "bn.js"
 import { LockIcon, UnlockIcon, ExternalLinkIcon, XIcon } from "lucide-react"
+import { useAtom } from "jotai"
+import { totalLockedTokensAtom } from "../atoms/totalLocked"
 
 // interface MembershipAccount {
 //   owner: PublicKey
@@ -32,7 +34,6 @@ let NUMBER_OF_TX: number
 let unlockTokens: (arg0: number) => void
 let checkMembershipAccount: () => void
 let balance: number;
-
 
 const TransactionLink = ({ signature }: { signature: string }) => (
   <a
@@ -68,6 +69,7 @@ const BoxBoxInterface: React.FC = () => {
 
   const [unlockingLockId, setUnlockingLockId] = useState<number | null>(null);
   const [isUnlockingDelayed, setIsUnlockingDelayed] = useState<boolean>(false);
+  const [totalLockedTokens, setTotalLockedTokens] = useAtom(totalLockedTokensAtom);
 
   const handleUnlockTokens = async (lockIndex: number) => {
     try {
@@ -76,16 +78,15 @@ const BoxBoxInterface: React.FC = () => {
       
       await unlockTokens(lockIndex);
       
-      // Keep showing "Unlocking..." for 6 seconds only for this specific lock
       setTimeout(() => {
         setIsUnlockingDelayed(false);
         setUnlockingLockId(null);
       }, 3000);
       
-    } catch (error) {
+    } catch (err) {
+      console.error("Error unlocking tokens:", err);
       setIsUnlockingDelayed(false);
       setUnlockingLockId(null);
-      // Handle error if needed
     }
   };
 
@@ -139,6 +140,34 @@ const BoxBoxInterface: React.FC = () => {
     return provider ? new Program<Boxbox>(idl_object, provider) : null
   }
 
+  const getTotalLockedTokens = async () => {
+    const program = getProgram();
+    if (!program || !connection) return;
+
+    try {
+      const accounts = await program.account.membershipAccount.all();
+      console.log('Found membership accounts:', accounts.length);
+      
+      const total = accounts.reduce((sum, account) => {
+        console.log('Account locks:', account.account.locks);
+        const lockedAmount = account.account.locks
+          .filter(lock => lock.isLocked)
+          .reduce((lockSum, lock) => {
+            console.log('Lock amount:', lock.amount.toString());
+            return lockSum + lock.amount.toNumber();
+          }, 0);
+        console.log('Account locked amount:', lockedAmount);
+        return sum + lockedAmount;
+      }, 0);
+
+      console.log('Total raw amount:', total);
+      // Update the atom state directly
+      setTotalLockedTokens(total / 1e6);
+    } catch (error) {
+      console.error("Error fetching total locked tokens:", error);
+    }
+  };
+
   useEffect(() => {
     if (publicKey) {
       checkMembershipAccount()
@@ -147,15 +176,17 @@ const BoxBoxInterface: React.FC = () => {
         initializeEscrowAccount()
       }
       fetchTokenBalance()
+      getTotalLockedTokens()
       const fetchData = async () => {
         checkMembershipAccount()
         // initializeMembershipAccount()
         // await updateAccountInfo()
         await fetchTokenBalance()
+        await getTotalLockedTokens()
       }
 
       fetchData()
-      const interval = setInterval(fetchData, 1000)
+      const interval = setInterval(fetchData, 3000)
 
       return () => clearInterval(interval)
     }
@@ -593,6 +624,22 @@ const BoxBoxInterface: React.FC = () => {
     </div>
   )
 
+  // Separate useEffect for total locked tokens updates
+  useEffect(() => {
+    const updateTotalLocked = async () => {
+      await getTotalLockedTokens()
+    }
+
+    // Initial fetch
+    updateTotalLocked()
+
+    // Set up interval
+    const interval = setInterval(updateTotalLocked, 3000)
+
+    // Cleanup
+    return () => clearInterval(interval)
+  }, [connection, publicKey])
+
   return (
     <div className="flex flex-col items-center justify-start text-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
@@ -600,6 +647,16 @@ const BoxBoxInterface: React.FC = () => {
           <h3 className="text-xl sm:text-2xl font-bold text-yellow-500">BoxBox Premium</h3>
           <div className="flex items-center w-full sm:w-auto justify-center sm:justify-end">
             <WalletMultiButton className="w-full sm:w-auto" />
+          </div>
+        </div>
+
+        {/* Add total locked tokens display here */}
+        <div className="text-center mb-8">
+          <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 max-w-md mx-auto">
+            <p className="text-gray-400 text-sm">Total BOXBOX Locked by the Community</p>
+            <p className="text-2xl font-bold text-yellow-500">
+              {totalLockedTokens.toLocaleString()} BOXBOX
+            </p>
           </div>
         </div>
 
