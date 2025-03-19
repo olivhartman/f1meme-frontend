@@ -643,6 +643,31 @@ const BoxBoxInterface: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-start text-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        {/* Total locked tokens display section */}
+        <div className="text-center mb-8">
+          <div className="bg-black/20 backdrop-blur-sm rounded-lg p-6 max-w-md mx-auto transform transition-all duration-300 hover:bg-black/30">
+            {wallet ? (
+              <>
+                <p className="text-yellow-400 text-lg sm:text-xl md:text-xl font-bold mb-3 tracking-tight">
+                  Total BOXBOX Locked
+                </p>
+                <div className="flex flex-col items-center space-y-1">
+                  <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-50 tracking-wider">
+                    {totalLockedTokens.toLocaleString()}
+                  </p>
+                  {/* <p className="text-yellow-500/80 text-sm sm:text-base uppercase tracking-widest font-medium">
+                    BOXBOX
+                  </p> */}
+                </div>
+              </>
+            ) : (
+              <p className="text-gray-400 text-lg sm:text-xl font-medium leading-relaxed">
+                Connect wallet to view<br />total locked tokens
+              </p>
+            )}
+          </div>
+        </div>
+
         <div className="rounded-t-xl p-3 sm:p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
           <h3 className="text-xl sm:text-2xl font-bold text-yellow-500">BoxBox Premium</h3>
           <div className="flex items-center w-full sm:w-auto justify-center sm:justify-end">
@@ -650,15 +675,6 @@ const BoxBoxInterface: React.FC = () => {
           </div>
         </div>
 
-        {/* Add total locked tokens display here */}
-        <div className="text-center mb-8">
-          <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 max-w-md mx-auto">
-            <p className="text-gray-400 text-sm">Total BOXBOX Locked by the Community</p>
-            <p className="text-2xl font-bold text-yellow-500">
-              {totalLockedTokens.toLocaleString()} BOXBOX
-            </p>
-          </div>
-        </div>
 
         {/* Remove bg-[#24252d] from messages */}
         {messages.map((message, index) => (

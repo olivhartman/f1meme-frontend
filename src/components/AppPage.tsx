@@ -92,7 +92,7 @@ export default function Home() {
           <section id="interface" className="w-full backdrop-blur-xs">
             <div className="w-full px-1">
               <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-12">
+                <div className="text-center mb-4">
                   <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent mb-4 py-3">
                     BoxBox Web3 Membership
                   </h2>
