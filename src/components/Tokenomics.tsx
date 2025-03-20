@@ -4,28 +4,112 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "./ui/card"
 import { Button } from "./ui/button"
 import { Info, Copy, ChevronDown } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 interface TokenDetails {
   address: string
   totalSupply: string
-  burnt: string
   name: string
   symbol: string
   price: string
-}
-
-const tokenDetails: TokenDetails = {
-  address: "A5D4sQ...TNJB8y",
-  totalSupply: "135,829,261,759.33",
-  burnt: "1,029,000",
-  name: "F1 Meme",
-  symbol: "BOXBOX",
-  price: "$0.064807",
+  volume24h: string
+  liquidity: string
+  marketCap: string
+  priceChange24h: string
+  transactions24h: {
+    buys: number
+    sells: number
+  }
 }
 
 export default function Tokenomics() {
+  const [tokenDetails, setTokenDetails] = useState<TokenDetails>({
+    address: "A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y",
+    totalSupply: "-",
+    name: "F1 Meme",
+    symbol: "BOXBOX",
+    price: "-",
+    volume24h: "-",
+    liquidity: "-",
+    marketCap: "-",
+    priceChange24h: "-",
+    transactions24h: {
+      buys: 0,
+      sells: 0
+    }
+  })
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    const fetchTokenData = async () => {
+      try {
+        // Check cache first
+        const cachedData = localStorage.getItem('tokenData')
+        const cachedTimestamp = localStorage.getItem('tokenDataTimestamp')
+        
+        const now = Date.now()
+        const cacheAge = cachedTimestamp ? now - parseInt(cachedTimestamp) : Infinity
+        const CACHE_DURATION = 60000 // 1 minute in milliseconds
+
+        // Use cached data if it's fresh
+        if (cachedData && cacheAge < CACHE_DURATION) {
+          const pair = JSON.parse(cachedData)
+          updateTokenDetails(pair)
+          setLoading(false)
+          return
+        }
+
+        // Fetch fresh data if cache is stale or missing
+        const response = await fetch(
+          `https://api.dexscreener.com/tokens/v1/solana/A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y`
+        )
+        const data = await response.json()
+
+        if (data[0]) {
+          const pair = data[0]
+          // Update cache
+          localStorage.setItem('tokenData', JSON.stringify(pair))
+          localStorage.setItem('tokenDataTimestamp', now.toString())
+          updateTokenDetails(pair)
+        }
+      } catch (err) {
+        setError("Failed to fetch token data")
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    // Helper function to update token details
+    const updateTokenDetails = (pair: any) => {
+      setTokenDetails(prev => ({
+        ...prev,
+        price: `$${Number(pair.priceUsd).toFixed(8)}`,
+        name: pair.baseToken.name,
+        symbol: pair.baseToken.symbol,
+        volume24h: `$${pair.volume?.h24?.toLocaleString() || '0'}`,
+        liquidity: `$${pair.liquidity?.usd?.toLocaleString() || '0'}`,
+        marketCap: `$${pair.marketCap?.toLocaleString() || '0'}`,
+        totalSupply: Number(pair.liquidity?.base || 0).toLocaleString(),
+        priceChange24h: `${pair.priceChange?.h24 > 0 ? '+' : ''}${pair.priceChange?.h24 || 0}%`,
+        transactions24h: {
+          buys: pair.txns?.h24?.buys || 0,
+          sells: pair.txns?.h24?.sells || 0
+        }
+      }))
+    }
+
+    // Initial fetch
+    fetchTokenData()
+
+    // Set up interval to fetch every minute
+    const interval = setInterval(fetchTokenData, 60000)
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval)
+  }, [])
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
@@ -67,84 +151,105 @@ export default function Tokenomics() {
         <motion.div>
           <Card className="backdrop-blur-sm border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300">
             <CardContent className="p-6 sm:p-8">
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">Token details</h3>
-
-              <motion.div
-                variants={container}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-100px" }}
-                className="space-y-4 sm:space-y-6"
-              >
-                <motion.div
-                  variants={item}
-                  className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden"
-                >
-                  <div className="text-gray-400 p-3 backdrop-blur-sm bg-black/20">Address</div>
-                  <div className="group flex items-center text-white font-mono break-all p-3 backdrop-blur-sm bg-black/10">
-                    {tokenDetails.address}
-                    <button
-                      onClick={() => copyToClipboard("A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y")}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex-shrink-0"
+              {error ? (
+                <div className="text-red-500 text-center">{error}</div>
+              ) : loading ? (
+                <div className="text-gray-400 text-center">Loading token details...</div>
+              ) : (
+                <>
+                  {/* <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">Token details</h3> */}
+                  <motion.div variants={container} initial="hidden" whileInView="show" 
+                    viewport={{ once: true, margin: "-100px" }} className="space-y-4 sm:space-y-6">
+                    <motion.div
+                      variants={item}
+                      className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden"
                     >
-                      <Copy size={16} className={`${copied ? "text-green-500" : "text-gray-400 hover:text-white"}`} />
-                    </button>
-                  </div>
-                </motion.div>
+                      <div className="text-gray-400 p-3 backdrop-blur-sm bg-black/20">Address</div>
+                      <div className="group flex items-center text-white font-mono break-all p-3 backdrop-blur-sm bg-black/10">
+                        {tokenDetails.address}
+                        <button
+                          onClick={() => copyToClipboard("A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y")}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex-shrink-0"
+                        >
+                          <Copy size={16} className={`${copied ? "text-green-500" : "text-gray-400 hover:text-white"}`} />
+                        </button>
+                      </div>
+                    </motion.div>
 
-                <motion.div variants={item}>
-                  <div className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden">
-                    <div className="text-gray-400 p-3 bg-gray-800/50">Total Supply</div>
-                    <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
-                      {tokenDetails.totalSupply}
-                    </div>
+                    <motion.div variants={item}>
+                      <div className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden">
+                        <div className="text-gray-400 p-3 bg-gray-800/50">Total Supply</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                          {tokenDetails.totalSupply}
+                        </div>
 
-                    <div className="text-gray-400 p-3 bg-gray-800/50">Burnt</div>
-                    <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
-                      {tokenDetails.burnt}
-                      <span className="text-gray-400">{tokenDetails.symbol}</span>
-                    </div>
+                        <div className="text-gray-400 p-3 bg-gray-800/50">Name(Symbol)</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                          {tokenDetails.name}
+                          <span className="text-gray-400">{tokenDetails.symbol}</span>
+                        </div>
 
-                    <div className="text-gray-400 p-3 bg-gray-800/50">Name(Symbol)</div>
-                    <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
-                      {tokenDetails.name}
-                      <span className="text-gray-400">{tokenDetails.symbol}</span>
-                    </div>
+                        <div className="text-gray-400 p-3 bg-gray-800/50">Token Price</div>
+                        <div className="text-yellow-500 p-3 bg-gray-800/30 flex items-center gap-2">
+                          {tokenDetails.price}
+                        </div>
 
-                    <div className="text-gray-400 p-3 bg-gray-800/50">Token Price</div>
-                    <div className="text-yellow-500 p-3 bg-gray-800/30 flex items-center gap-2">
-                      {tokenDetails.price}
-                    </div>
-                  </div>
-                </motion.div>
+                        <div className="text-gray-400 p-3 bg-gray-800/50">24h Volume</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                          {tokenDetails.volume24h}
+                        </div>
 
-                <motion.div
-                  variants={item}
-                  className="mt-8 flex items-start gap-3 text-gray-400 bg-black/40 p-4 rounded-lg border border-white/10"
-                >
-                  <Info className="flex-shrink-0 mt-1" size={20} />
-                  <p className="text-sm">
-                    Currently the Liquidity is very low, if you have trouble buying large amount of BOXBOX tokens,
-                    please consider doing multiple swap in smaller amount.
-                  </p>
-                </motion.div>
+                        <div className="text-gray-400 p-3 bg-gray-800/50">Liquidity</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                          {tokenDetails.liquidity}
+                        </div>
 
-                <motion.div variants={item}>
-                  <Button
-                    className="w-full bg-yellow-500 hover:bg-yellow-500/80 text-black font-bold py-4 rounded-full mt-6 transition-all duration-300"
-                    size="lg"
-                  >
-                    SWAP NOW
-                  </Button>
-                </motion.div>
-              </motion.div>
+                        <div className="text-gray-400 p-3 bg-gray-800/50">Market Cap</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                          {tokenDetails.marketCap}
+                        </div>
+
+                        <div className="text-gray-400 p-3 bg-gray-800/50">24h Change</div>
+                        <div className={`p-3 bg-gray-800/30 flex items-center gap-2 ${
+                          parseFloat(tokenDetails.priceChange24h) > 0 ? 'text-green-500' : 'text-red-500'
+                        }`}>
+                          {tokenDetails.priceChange24h}
+                        </div>
+
+                        <div className="text-gray-400 p-3 bg-gray-800/50">24h Trades</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                          <span className="text-green-500">↑{tokenDetails.transactions24h.buys}</span>
+                          <span className="text-red-500">↓{tokenDetails.transactions24h.sells}</span>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      variants={item}
+                      className="mt-8 flex items-start gap-3 text-gray-400 bg-black/40 p-4 rounded-lg border border-white/10"
+                    >
+                      <Info className="flex-shrink-0 mt-1" size={20} />
+                      <p className="text-sm">
+                        Currently the Liquidity is very low, if you have trouble buying large amount of BOXBOX tokens,
+                        please consider doing multiple swap in smaller amount.
+                      </p>
+                    </motion.div>
+
+                    <motion.div variants={item}>
+                      <Button
+                        className="w-full bg-yellow-500 hover:bg-yellow-500/80 text-black font-bold py-4 rounded-full mt-6 transition-all duration-300"
+                        size="lg"
+                      >
+                        SWAP NOW
+                      </Button>
+                    </motion.div>
+                  </motion.div>
+                </>
+              )}
             </CardContent>
           </Card>
         </motion.div>
-
-        
       </div>
-
     </div>
   )
 }
