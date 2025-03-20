@@ -146,21 +146,21 @@ const BoxBoxInterface: React.FC = () => {
 
     try {
       const accounts = await program.account.membershipAccount.all();
-      console.log('Found membership accounts:', accounts.length);
+      // console.log('Found membership accounts:', accounts.length);
       
       const total = accounts.reduce((sum, account) => {
-        console.log('Account locks:', account.account.locks);
+        // console.log('Account locks:', account.account.locks);
         const lockedAmount = account.account.locks
           .filter(lock => lock.isLocked)
           .reduce((lockSum, lock) => {
-            console.log('Lock amount:', lock.amount.toString());
+            // console.log('Lock amount:', lock.amount.toString());
             return lockSum + lock.amount.toNumber();
           }, 0);
-        console.log('Account locked amount:', lockedAmount);
+        // console.log('Account locked amount:', lockedAmount);
         return sum + lockedAmount;
       }, 0);
 
-      console.log('Total raw amount:', total);
+      // console.log('Total raw amount:', total);
       // Update the atom state directly
       setTotalLockedTokens(total / 1e6);
     } catch (error) {
@@ -186,7 +186,7 @@ const BoxBoxInterface: React.FC = () => {
       }
 
       fetchData()
-      const interval = setInterval(fetchData, 3000)
+      const interval = setInterval(fetchData, 30000)
 
       return () => clearInterval(interval)
     }
