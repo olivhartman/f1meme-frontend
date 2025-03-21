@@ -142,6 +142,9 @@ const BoxBoxInterface: React.FC = () => {
 
   const setupProgramSubscription = useCallback(async () => {
     const ws = new WebSocket('wss://devnet.helius-rpc.com/?api-key=fb381146-ea31-4f74-8cb6-60ec5106e06c');
+    let retryCount = 0;
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 5000; // 5 seconds
 
     // Function to send subscription request
     const sendSubscriptionRequest = (ws: WebSocket) => {
@@ -150,11 +153,10 @@ const BoxBoxInterface: React.FC = () => {
             id: 1,
             method: "programSubscribe",
             params: [
-                "5wsriCThJpgx5iMqpQ1fqNC33FCetYhF3d24Wzg5ceHH",  // Your program ID
+                "5wsriCThJpgx5iMqpQ1fqNC33FCetYhF3d24Wzg5ceHH",
                 {
                     encoding: "jsonParsed",
                     commitment: "confirmed"
-                    // Remove filters to get all program updates
                 }
             ]
         };
@@ -165,16 +167,15 @@ const BoxBoxInterface: React.FC = () => {
 
     ws.onopen = () => {
         console.log('WebSocket Connected');
+        retryCount = 0; // Reset retry count on successful connection
         sendSubscriptionRequest(ws);
         
-        // Start ping interval
         pingInterval = setInterval(() => {
             if (ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({ jsonrpc: "2.0", method: "ping" }));
             }
         }, 30000);
 
-        // Get initial total
         updateTotalLockedTokens();
     };
 
@@ -182,7 +183,36 @@ const BoxBoxInterface: React.FC = () => {
         try {
             const response = JSON.parse(event.data);
             
-            // Check for both program notifications and account notifications
+            // Handle rate limit error
+            if (response.error && response.error.code === 429) {
+                console.log('Rate limit hit, implementing backoff...');
+                // Immediately update local total even during rate limit
+                await updateTotalLockedTokens();
+                
+                if (retryCount < MAX_RETRIES) {
+                    retryCount++;
+                    const delay = RETRY_DELAY * Math.pow(2, retryCount - 1); // Exponential backoff
+                    setTimeout(() => {
+                        if (ws.readyState === WebSocket.OPEN) {
+                            sendSubscriptionRequest(ws);
+                        }
+                    }, delay);
+                } else {
+                    console.error('Max retries reached, falling back to polling');
+                    // Fall back to polling with shorter interval
+                    const pollInterval = setInterval(async () => {
+                        await updateTotalLockedTokens();
+                    }, 5000); // Poll every 5 seconds instead of 10
+                    
+                    // Clear polling after 5 minutes
+                    setTimeout(() => {
+                        clearInterval(pollInterval);
+                        retryCount = 0;
+                    }, 300000);
+                }
+                return;
+            }
+
             if (response.method === "programNotification" || 
                 (response.result && response.result.value)) {
                 console.log('Received update, refreshing totals');
@@ -190,11 +220,21 @@ const BoxBoxInterface: React.FC = () => {
             }
         } catch (error) {
             console.error('Error processing WebSocket message:', error);
+            // Update local total even if there's an error processing the message
         }
     };
 
     ws.onerror = (error) => {
         console.error('WebSocket Error:', error);
+        if (retryCount < MAX_RETRIES) {
+            retryCount++;
+            const delay = RETRY_DELAY * Math.pow(2, retryCount - 1);
+            setTimeout(() => {
+                if (ws.readyState === WebSocket.CLOSED) {
+                    setupProgramSubscription();
+                }
+            }, delay);
+        }
     };
 
     ws.onclose = () => {
@@ -202,11 +242,15 @@ const BoxBoxInterface: React.FC = () => {
         if (pingInterval) {
             clearInterval(pingInterval);
         }
-        // Attempt to reconnect after a delay
-        setTimeout(() => setupProgramSubscription(), 5000);
+        if (retryCount < MAX_RETRIES) {
+            retryCount++;
+            const delay = RETRY_DELAY * Math.pow(2, retryCount - 1);
+            setTimeout(() => {
+                setupProgramSubscription();
+            }, delay);
+        }
     };
 
-    // Return cleanup function
     return () => {
         if (pingInterval) {
             clearInterval(pingInterval);
