@@ -3,11 +3,11 @@ import * as buffer from "buffer";
 window.Buffer = buffer.Buffer;
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
 import { Program, AnchorProvider, utils, setProvider } from "@coral-xyz/anchor"
-import { PublicKey } from "@solana/web3.js"
+import { PublicKey, Connection } from "@solana/web3.js"
 import idl from "../idl/boxbox.json"
 import type { Boxbox } from "../types/boxbox"
 import BN from "bn.js"
@@ -168,6 +168,95 @@ const BoxBoxInterface: React.FC = () => {
     }
   };
 
+  // Create WebSocket connection to Helius
+  const setupProgramSubscription = useCallback(async () => {
+    const ws = new WebSocket('wss://devnet.helius-rpc.com/?api-key=fb381146-ea31-4f74-8cb6-60ec5106e06c');
+
+    ws.onopen = () => {
+      console.log('WebSocket Connected');
+      // Subscribe to program updates
+      const subscribeMessage = {
+        jsonrpc: "2.0",
+        id: 1,
+        method: "programSubscribe",
+        params: [
+          "5wsriCThJpgx5iMqpQ1fqNC33FCetYhF3d24Wzg5ceHH", // Your program ID
+          {
+            encoding: "jsonParsed",
+            commitment: "confirmed"
+          }
+        ]
+      };
+      ws.send(JSON.stringify(subscribeMessage));
+    };
+
+    ws.onmessage = async (event) => {
+      try {
+        const response = JSON.parse(event.data);
+        if (response.method === "programNotification") {
+          // When we receive an update, recalculate total locked tokens
+          const program = getProgram();
+          if (!program) return;
+
+          const accounts = await program.account.membershipAccount.all();
+          const total = accounts.reduce((sum, account) => {
+            const lockedAmount = account.account.locks
+              .filter(lock => lock.isLocked)
+              .reduce((lockSum, lock) => {
+                return lockSum + lock.amount.toNumber();
+              }, 0);
+            return sum + lockedAmount;
+          }, 0);
+
+          setTotalLockedTokens(total / 1e6);
+        }
+      } catch (error) {
+        console.error('Error processing WebSocket message:', error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket Error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket Disconnected');
+      // Attempt to reconnect after a delay
+      setTimeout(() => setupProgramSubscription(), 5000);
+    };
+
+    // Cleanup function
+    return () => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
+  }, ["5wsriCThJpgx5iMqpQ1fqNC33FCetYhF3d24Wzg5ceHH"]);
+
+  // Set up WebSocket subscription when component mounts
+  useEffect(() => {
+    if (publicKey) {
+      const cleanup = setupProgramSubscription();
+      return () => {
+        cleanup.then(cleanupFn => cleanupFn());
+      };
+    }
+  }, [publicKey, setupProgramSubscription]);
+
+  // Remove or modify the existing interval-based total locked tokens update
+  // since we're now using WebSocket
+  useEffect(() => {
+    if (publicKey) {
+      // Initial fetch
+      getTotalLockedTokens();
+      
+      // No need for interval anymore as we're using WebSocket
+      // but you might want to keep a longer interval as fallback
+      const interval = setInterval(getTotalLockedTokens, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [publicKey]);
+
   useEffect(() => {
     if (publicKey) {
       checkMembershipAccount()
@@ -186,7 +275,7 @@ const BoxBoxInterface: React.FC = () => {
       }
 
       fetchData()
-      const interval = setInterval(fetchData, 30000)
+      const interval = setInterval(fetchData, 3000)
 
       return () => clearInterval(interval)
     }
@@ -623,22 +712,6 @@ const BoxBoxInterface: React.FC = () => {
       <span className="text-xl font-semibold">{level}</span>
     </div>
   )
-
-  // Separate useEffect for total locked tokens updates
-  useEffect(() => {
-    const updateTotalLocked = async () => {
-      await getTotalLockedTokens()
-    }
-
-    // Initial fetch
-    updateTotalLocked()
-
-    // Set up interval
-    const interval = setInterval(updateTotalLocked, 3000)
-
-    // Cleanup
-    return () => clearInterval(interval)
-  }, [connection, publicKey])
 
   return (
     <div className="flex flex-col items-center justify-start text-white">
