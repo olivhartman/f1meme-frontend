@@ -140,100 +140,118 @@ const BoxBoxInterface: React.FC = () => {
     return provider ? new Program<Boxbox>(idl_object, provider) : null
   }
 
-  const getTotalLockedTokens = async () => {
-    const program = getProgram();
-    if (!program || !connection) return;
-
-    try {
-      const accounts = await program.account.membershipAccount.all();
-      // console.log('Found membership accounts:', accounts.length);
-      
-      const total = accounts.reduce((sum, account) => {
-        // console.log('Account locks:', account.account.locks);
-        const lockedAmount = account.account.locks
-          .filter(lock => lock.isLocked)
-          .reduce((lockSum, lock) => {
-            // console.log('Lock amount:', lock.amount.toString());
-            return lockSum + lock.amount.toNumber();
-          }, 0);
-        // console.log('Account locked amount:', lockedAmount);
-        return sum + lockedAmount;
-      }, 0);
-
-      // console.log('Total raw amount:', total);
-      // Update the atom state directly
-      setTotalLockedTokens(total / 1e6);
-    } catch (error) {
-      console.error("Error fetching total locked tokens:", error);
-    }
-  };
-
-  // Create WebSocket connection to Helius
   const setupProgramSubscription = useCallback(async () => {
     const ws = new WebSocket('wss://devnet.helius-rpc.com/?api-key=fb381146-ea31-4f74-8cb6-60ec5106e06c');
 
+    // Function to send ping
+    const startPing = (ws: WebSocket) => {
+        const pingInterval = setInterval(() => {
+            if (ws.readyState === WebSocket.OPEN) {
+                // Send a custom ping message instead of using ws.ping()
+                ws.send(JSON.stringify({ jsonrpc: "2.0", method: "ping" }));
+                console.log('Ping sent');
+            }
+        }, 30000); // Ping every 30 seconds
+        
+        return pingInterval; // Return interval ID for cleanup
+    };
+
+    // Function to send subscription request
+    const sendSubscriptionRequest = (ws: WebSocket) => {
+        const subscribeMessage = {
+            jsonrpc: "2.0",
+            id: 1,
+            method: "programSubscribe",
+            params: [
+                "5wsriCThJpgx5iMqpQ1fqNC33FCetYhF3d24Wzg5ceHH",
+                {
+                    encoding: "jsonParsed",
+                    commitment: "confirmed"
+                }
+            ]
+        };
+        ws.send(JSON.stringify(subscribeMessage));
+    };
+
+    let pingInterval: NodeJS.Timeout;
+
     ws.onopen = () => {
-      console.log('WebSocket Connected');
-      // Subscribe to program updates
-      const subscribeMessage = {
-        jsonrpc: "2.0",
-        id: 1,
-        method: "programSubscribe",
-        params: [
-          "5wsriCThJpgx5iMqpQ1fqNC33FCetYhF3d24Wzg5ceHH", // Your program ID
-          {
-            encoding: "jsonParsed",
-            commitment: "confirmed"
-          }
-        ]
-      };
-      ws.send(JSON.stringify(subscribeMessage));
+        console.log('WebSocket Connected');
+        sendSubscriptionRequest(ws);
+        pingInterval = startPing(ws);
+
+        // Get initial total from ALL membership accounts
+        const program = getProgram();
+        console.log('Program check:', {
+            hasWallet: !!wallet,
+            hasProgram: !!program
+        });
+        if (program) {
+          console.log('soya');
+            program.account.membershipAccount.all()
+                .then(accounts => {
+                    const total = accounts.reduce((sum, account) => {
+                        const lockedAmount = account.account.locks
+                            .filter(lock => lock.isLocked)
+                            .reduce((lockSum, lock) => lockSum + lock.amount.toNumber(), 0);
+                        return sum + lockedAmount;
+                    }, 0);
+                    setTotalLockedTokens(total / 1e6);
+                })
+                .catch(console.error);
+        }
+        console.log('milk');
     };
 
     ws.onmessage = async (event) => {
-      try {
-        const response = JSON.parse(event.data);
-        if (response.method === "programNotification") {
-          // When we receive an update, recalculate total locked tokens
-          const program = getProgram();
-          if (!program) return;
-
-          const accounts = await program.account.membershipAccount.all();
-          const total = accounts.reduce((sum, account) => {
-            const lockedAmount = account.account.locks
-              .filter(lock => lock.isLocked)
-              .reduce((lockSum, lock) => {
-                return lockSum + lock.amount.toNumber();
-              }, 0);
-            return sum + lockedAmount;
-          }, 0);
-
-          setTotalLockedTokens(total / 1e6);
+        try {
+            const response = JSON.parse(event.data);
+            console.log('WebSocket message:', response);
+            
+            if (response.method === "programNotification") {
+                // Fetch all accounts again to get the new total
+                const program = getProgram();
+                if (program) {
+                    const accounts = await program.account.membershipAccount.all();
+                    const total = accounts.reduce((sum, account) => {
+                        const lockedAmount = account.account.locks
+                            .filter(lock => lock.isLocked)
+                            .reduce((lockSum, lock) => lockSum + lock.amount.toNumber(), 0);
+                        return sum + lockedAmount;
+                    }, 0);
+                    setTotalLockedTokens(total / 1e6);
+                }
+            }
+        } catch (error) {
+            console.error('Error processing WebSocket message:', error);
         }
-      } catch (error) {
-        console.error('Error processing WebSocket message:', error);
-      }
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket Error:', error);
+        console.error('WebSocket Error:', error);
     };
 
     ws.onclose = () => {
-      console.log('WebSocket Disconnected');
-      // Attempt to reconnect after a delay
-      setTimeout(() => setupProgramSubscription(), 5000);
+        console.log('WebSocket Disconnected');
+        // Clear ping interval
+        if (pingInterval) {
+            clearInterval(pingInterval);
+        }
+        // Attempt to reconnect after a delay
+        setTimeout(() => setupProgramSubscription(), 5000);
     };
 
-    // Cleanup function
+    // Return cleanup function
     return () => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.close();
-      }
+        if (pingInterval) {
+            clearInterval(pingInterval);
+        }
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.close();
+        }
     };
-  }, ["5wsriCThJpgx5iMqpQ1fqNC33FCetYhF3d24Wzg5ceHH"]);
+  }, []);
 
-  // Set up WebSocket subscription when component mounts
   useEffect(() => {
     if (publicKey) {
       const cleanup = setupProgramSubscription();
@@ -243,19 +261,24 @@ const BoxBoxInterface: React.FC = () => {
     }
   }, [publicKey, setupProgramSubscription]);
 
-  // Remove or modify the existing interval-based total locked tokens update
-  // since we're now using WebSocket
   useEffect(() => {
-    if (publicKey) {
-      // Initial fetch
-      getTotalLockedTokens();
-      
-      // No need for interval anymore as we're using WebSocket
-      // but you might want to keep a longer interval as fallback
-      const interval = setInterval(getTotalLockedTokens, 3000);
-      return () => clearInterval(interval);
+    if (wallet) {  // Only run when wallet is connected
+        const program = getProgram();
+        if (program) {
+            program.account.membershipAccount.all()
+                .then(accounts => {
+                    const total = accounts.reduce((sum, account) => {
+                        const lockedAmount = account.account.locks
+                            .filter(lock => lock.isLocked)
+                            .reduce((lockSum, lock) => lockSum + lock.amount.toNumber(), 0);
+                        return sum + lockedAmount;
+                    }, 0);
+                    setTotalLockedTokens(total / 1e6);
+                })
+                .catch(console.error);
+        }
     }
-  }, [publicKey]);
+  }, [wallet]); // Re-run when wallet changes
 
   useEffect(() => {
     if (publicKey) {
@@ -265,13 +288,9 @@ const BoxBoxInterface: React.FC = () => {
         initializeEscrowAccount()
       }
       fetchTokenBalance()
-      getTotalLockedTokens()
       const fetchData = async () => {
         checkMembershipAccount()
-        // initializeMembershipAccount()
-        // await updateAccountInfo()
         await fetchTokenBalance()
-        await getTotalLockedTokens()
       }
 
       fetchData()
