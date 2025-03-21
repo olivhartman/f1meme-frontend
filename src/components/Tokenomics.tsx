@@ -192,62 +192,62 @@ export default function Tokenomics() {
                     viewport={{ once: true, margin: "-100px" }} className="space-y-4 sm:space-y-6">
                     <motion.div
                       variants={item}
-                      className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden"
+                      className="flex flex-col sm:grid sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden"
                     >
-                      <div className="text-gray-400 p-3 backdrop-blur-sm bg-black/20">Address</div>
-                      <div className="group flex items-center text-white font-mono break-all p-3 backdrop-blur-sm bg-black/10">
+                      <div className="text-gray-400 p-3 backdrop-blur-sm bg-black/20 text-sm sm:text-base">Address</div>
+                      <div className="group flex items-center text-white font-mono text-xs sm:text-sm break-all p-3 backdrop-blur-sm bg-black/10">
                         {tokenDetails.address}
                         <button
-                          onClick={() => copyToClipboard("A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y")}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex-shrink-0"
+                          onClick={() => copyToClipboard(tokenDetails.address)}
+                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity ml-2 flex-shrink-0"
                         >
-                          <Copy size={16} className={`${copied ? "text-green-500" : "text-gray-400 hover:text-white"}`} />
+                          <Copy size={14} className={`${copied ? "text-green-500" : "text-gray-400 hover:text-white"}`} />
                         </button>
                       </div>
                     </motion.div>
 
                     <motion.div variants={item}>
-                      <div className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden">
-                        <div className="text-gray-400 p-3 bg-gray-800/50">Total Supply</div>
-                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                      <div className="flex flex-col sm:grid sm:grid-cols-[140px_1fr] gap-y-3 sm:gap-y-4 border border-gray-700/50 rounded-lg overflow-hidden">
+                        <div className="text-gray-400 p-3 bg-gray-800/50 text-sm sm:text-base">Total Supply</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2 text-sm sm:text-base">
                           {tokenDetails.totalSupply}
                         </div>
 
-                        <div className="text-gray-400 p-3 bg-gray-800/50">Name(Symbol)</div>
-                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                        <div className="text-gray-400 p-3 bg-gray-800/50 text-sm sm:text-base">Name(Symbol)</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2 text-sm sm:text-base">
                           {tokenDetails.name}
                           <span className="text-gray-400">{tokenDetails.symbol}</span>
                         </div>
 
-                        <div className="text-gray-400 p-3 bg-gray-800/50">Token Price</div>
-                        <div className="text-yellow-500 p-3 bg-gray-800/30 flex items-center gap-2">
+                        <div className="text-gray-400 p-3 bg-gray-800/50 text-sm sm:text-base">Token Price</div>
+                        <div className="text-yellow-500 p-3 bg-gray-800/30 flex items-center gap-2 text-sm sm:text-base">
                           {tokenDetails.price}
                         </div>
 
-                        <div className="text-gray-400 p-3 bg-gray-800/50">24h Volume</div>
-                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                        <div className="text-gray-400 p-3 bg-gray-800/50 text-sm sm:text-base">24h Volume</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2 text-sm sm:text-base">
                           {tokenDetails.volume24h}
                         </div>
 
-                        <div className="text-gray-400 p-3 bg-gray-800/50">Liquidity</div>
-                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                        <div className="text-gray-400 p-3 bg-gray-800/50 text-sm sm:text-base">Liquidity</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2 text-sm sm:text-base">
                           {tokenDetails.liquidity}
                         </div>
 
-                        <div className="text-gray-400 p-3 bg-gray-800/50">Market Cap</div>
-                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                        <div className="text-gray-400 p-3 bg-gray-800/50 text-sm sm:text-base">Market Cap</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2 text-sm sm:text-base">
                           {tokenDetails.marketCap}
                         </div>
 
-                        <div className="text-gray-400 p-3 bg-gray-800/50">24h Change</div>
+                        <div className="text-gray-400 p-3 bg-gray-800/50 text-sm sm:text-base">24h Change</div>
                         <div className={`p-3 bg-gray-800/30 flex items-center gap-2 ${
                           parseFloat(tokenDetails.priceChange24h) > 0 ? 'text-green-500' : 'text-red-500'
-                        }`}>
+                        } text-sm sm:text-base`}>
                           {tokenDetails.priceChange24h}
                         </div>
 
-                        <div className="text-gray-400 p-3 bg-gray-800/50">24h Trades</div>
-                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2">
+                        <div className="text-gray-400 p-3 bg-gray-800/50 text-sm sm:text-base">24h Trades</div>
+                        <div className="text-white p-3 bg-gray-800/30 flex items-center gap-2 text-sm sm:text-base">
                           <span className="text-green-500">↑{tokenDetails.transactions24h.buys}</span>
                           <span className="text-red-500">↓{tokenDetails.transactions24h.sells}</span>
                         </div>
