@@ -63,16 +63,36 @@ export default function Tokenomics() {
 
         // Fetch fresh data if cache is stale or missing
         const response = await fetch(
-          `https://api.dexscreener.com/tokens/v1/solana/A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y`
+          `https://api.geckoterminal.com/api/v2/networks/solana/tokens/A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y`,
+          {
+            headers: {
+              'Accept': 'application/json'
+            }
+          }
         )
         const data = await response.json()
 
-        if (data[0]) {
-          const pair = data[0]
+        if (data.data) {
+          // Get pool data for additional metrics
+          const poolsResponse = await fetch(
+            `https://api.geckoterminal.com/api/v2/networks/solana/tokens/A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y/pools`,
+            {
+              headers: {
+                'Accept': 'application/json'
+              }
+            }
+          )
+          const poolsData = await poolsResponse.json()
+          
+          const tokenData = {
+            ...data.data,
+            pools: poolsData.data
+          }
+
           // Update cache
-          localStorage.setItem('tokenData', JSON.stringify(pair))
+          localStorage.setItem('tokenData', JSON.stringify(tokenData))
           localStorage.setItem('tokenDataTimestamp', now.toString())
-          updateTokenDetails(pair)
+          updateTokenDetails(tokenData)
         }
       } catch (err) {
         setError("Failed to fetch token data")
@@ -83,20 +103,30 @@ export default function Tokenomics() {
     }
 
     // Helper function to update token details
-    const updateTokenDetails = (pair: any) => {
+    const updateTokenDetails = (tokenData: any) => {
+      // Get the attributes from the response
+      const attributes = tokenData.attributes || {}
+      
       setTokenDetails(prev => ({
         ...prev,
-        price: `$${Number(pair.priceUsd).toFixed(8)}`,
-        name: pair.baseToken.name,
-        symbol: pair.baseToken.symbol,
-        volume24h: `$${pair.volume?.h24?.toLocaleString() || '0'}`,
-        liquidity: `$${pair.liquidity?.usd?.toLocaleString() || '0'}`,
-        marketCap: `$${pair.marketCap?.toLocaleString() || '0'}`,
-        totalSupply: Number(pair.liquidity?.base || 0).toLocaleString(),
-        priceChange24h: `${pair.priceChange?.h24 > 0 ? '+' : ''}${pair.priceChange?.h24 || 0}%`,
+        address: attributes.address || prev.address,
+        name: attributes.name || prev.name,
+        symbol: attributes.symbol || prev.symbol,
+        price: attributes.price_usd ? 
+          `$${Number(attributes.price_usd).toFixed(8)}` : '-',
+        volume24h: attributes.volume_usd?.h24 ? 
+          `$${Number(attributes.volume_usd.h24).toLocaleString()}` : '-',
+        liquidity: attributes.total_reserve_in_usd ? 
+          `$${Number(attributes.total_reserve_in_usd).toLocaleString()}` : '-',
+        marketCap: attributes.fdv_usd ? 
+          `$${Number(attributes.fdv_usd).toLocaleString()}` : '-',
+        totalSupply: attributes.total_supply ? 
+          Number(attributes.total_supply).toLocaleString() : '-',
+        // Since price change is not in the API response, keeping it as is
+        priceChange24h: '-',
         transactions24h: {
-          buys: pair.txns?.h24?.buys || 0,
-          sells: pair.txns?.h24?.sells || 0
+          buys: 0,  // These values aren't available in the basic token response
+          sells: 0
         }
       }))
     }
