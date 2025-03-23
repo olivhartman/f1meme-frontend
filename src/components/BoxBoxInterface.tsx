@@ -985,7 +985,7 @@ useEffect(() => {
                             <div className="space-y-3">
                               <div>
                                 <span className="text-gray-400 text-sm">Locked Amount</span>
-                                <span className="text-lg sm:text-xl font-semibold block mt-1">{lock.amount} BOXBOX</span>
+                                <span className="text-lg sm:text-xl font-semibold block mt-1">{lock.amount.toLocaleString()} BOXBOX</span>
                               </div>
                               <div>
                                 <span className="text-gray-400 text-sm">Release Date</span>
@@ -1040,7 +1040,7 @@ useEffect(() => {
                           <div key={lock.id} className="bg-[#1a1b23] p-4 rounded-lg">
                             <div>
                               <span className="text-gray-400 text-sm">Unlocked Amount</span>
-                              <span className="text-lg sm:text-xl font-semibold block mt-1">{lock.amount} BOXBOX</span>
+                              <span className="text-lg sm:text-xl font-semibold block mt-1">{lock.amount.toLocaleString()} BOXBOX</span>
                             </div>
                             <div className="mt-3">
                               <span className="text-gray-400 text-sm">Unlocked Date</span>
