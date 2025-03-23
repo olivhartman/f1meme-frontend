@@ -35,6 +35,17 @@ let unlockTokens: (arg0: number) => void
 let checkMembershipAccount: () => void
 let balance: number;
 
+const formatNumber = (num: number): string => {
+  // Split the number into whole and decimal parts
+  const parts = num.toString().split('.');
+  
+  // Format the whole number part with commas
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  
+  // Join back with decimal part if it exists
+  return parts.join('.');
+};
+
 const TransactionLink = ({ signature }: { signature: string }) => (
   <a
     href={`https://solana.fm/tx/${signature}?cluster=devnet-alpha`}
@@ -830,7 +841,7 @@ useEffect(() => {
                 </p>
                 <div className="flex flex-col items-center space-y-1">
                   <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-50 tracking-wider">
-                    {totalLockedTokens.toLocaleString()}
+                    {formatNumber(totalLockedTokens)}
                   </p>
                   {/* <p className="text-yellow-500/80 text-sm sm:text-base uppercase tracking-widest font-medium">
                     BOXBOX
@@ -881,7 +892,7 @@ useEffect(() => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div className="backdrop-blur-sm bg-black/20 p-4 rounded-lg">
                     <span className="text-gray-400 text-sm">Token Balance</span>
-                    <span className="text-lg sm:text-xl font-semibold block mt-1">{tokenBalance.toLocaleString()} BOXBOX</span>
+                    <span className="text-lg sm:text-xl font-semibold block mt-1">{formatNumber(tokenBalance)} BOXBOX</span>
                   </div>
                   <div className="backdrop-blur-sm bg-black/20 p-4 rounded-lg">
                     <span className="text-gray-400 text-sm">Membership Account</span>
@@ -927,10 +938,10 @@ useEffect(() => {
                       <input
                         type="text"
                         id="amountToLock"
-                        value={Number(amountToLock).toLocaleString()}
+                        value={amountToLock ? formatNumber(Number(amountToLock)) : ""}
                         onChange={(e) => {
-                          // Remove commas and non-numeric characters before setting the value
-                          const numericValue = e.target.value.replace(/[^0-9.]/g, '');
+                          // Remove all non-numeric characters before setting the value
+                          const numericValue = e.target.value.replace(/[^0-9]/g, '');
                           setAmountToLock(numericValue);
                         }}
                         min="0"
@@ -985,7 +996,7 @@ useEffect(() => {
                             <div className="space-y-3">
                               <div>
                                 <span className="text-gray-400 text-sm">Locked Amount</span>
-                                <span className="text-lg sm:text-xl font-semibold block mt-1">{lock.amount.toLocaleString()} BOXBOX</span>
+                                <span className="text-lg sm:text-xl font-semibold block mt-1">{formatNumber(lock.amount)} BOXBOX</span>
                               </div>
                               <div>
                                 <span className="text-gray-400 text-sm">Release Date</span>
@@ -1040,7 +1051,7 @@ useEffect(() => {
                           <div key={lock.id} className="bg-[#1a1b23] p-4 rounded-lg">
                             <div>
                               <span className="text-gray-400 text-sm">Unlocked Amount</span>
-                              <span className="text-lg sm:text-xl font-semibold block mt-1">{lock.amount.toLocaleString()} BOXBOX</span>
+                              <span className="text-lg sm:text-xl font-semibold block mt-1">{formatNumber(lock.amount)} BOXBOX</span>
                             </div>
                             <div className="mt-3">
                               <span className="text-gray-400 text-sm">Unlocked Date</span>

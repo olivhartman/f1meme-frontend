@@ -106,10 +106,10 @@ export default function Hero() {
     "Exciting battle for midfield positions 🏁",
   ])
   const [nextRace, setNextRace] = useState<NextRaceInfo>({
-    date: "2025-03-23",
-    time: "08:00:00",
-    raceName: "Chinese Grand Prix",
-    circuit: "Chinese Grand Prix Circuit",
+    date: "2025-04-06",
+    time: "06:00:00",
+    raceName: "FORMULA 1 LENOVO JAPANESE GRAND PRIX 2025",
+    circuit: "FORMULA 1 LENOVO JAPANESE GRAND PRIX 2025",
   })
   const [player, setPlayer] = useState<any>(null)
   const [seasonInfo, setSeasonInfo] = useState<SeasonInfo>({
