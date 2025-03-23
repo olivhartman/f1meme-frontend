@@ -881,7 +881,7 @@ useEffect(() => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div className="backdrop-blur-sm bg-black/20 p-4 rounded-lg">
                     <span className="text-gray-400 text-sm">Token Balance</span>
-                    <span className="text-lg sm:text-xl font-semibold block mt-1">{tokenBalance} BOXBOX</span>
+                    <span className="text-lg sm:text-xl font-semibold block mt-1">{tokenBalance.toLocaleString()} BOXBOX</span>
                   </div>
                   <div className="backdrop-blur-sm bg-black/20 p-4 rounded-lg">
                     <span className="text-gray-400 text-sm">Membership Account</span>
@@ -925,14 +925,18 @@ useEffect(() => {
                         ▼
                       </button>
                       <input
-                        type="number"
+                        type="text"
                         id="amountToLock"
-                        value={amountToLock}
-                        onChange={(e) => setAmountToLock(e.target.value)}
+                        value={Number(amountToLock).toLocaleString()}
+                        onChange={(e) => {
+                          // Remove commas and non-numeric characters before setting the value
+                          const numericValue = e.target.value.replace(/[^0-9.]/g, '');
+                          setAmountToLock(numericValue);
+                        }}
                         min="0"
                         max={tokenBalance.toString()}
                         step="100"
-                        className="w-full px-14 py-3 bg-[#24252d] rounded-md border border-gray-600 text-white text-center text-lg focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="w-full px-14 py-3 bg-[#24252d] rounded-md border border-gray-600 text-white text-center text-lg focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
                       />
                       <button
                         type="button"

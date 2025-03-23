@@ -236,7 +236,7 @@ export default function Hero() {
         controls: false,
         responsive: true,
         width: '80vw',
-        t: '7s'
+        // t: '7s'
       })
 
       setPlayer(vimeoPlayer)
