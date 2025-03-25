@@ -2,12 +2,12 @@
  * Program IDL in camelCase format in order to be used in JS/TS.
  *
  * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/boxbox.json`.
+ * IDL can be found at `target/idl/f1boxbox.json`.
  */
-export type Boxbox = {
-  "address": "5wsriCThJpgx5iMqpQ1fqNC33FCetYhF3d24Wzg5ceHH",
+export type F1boxbox = {
+  "address": "GXD3XAfYGPwjCJWXNfcWhSevDdLRgh3qs9U2NURYNDgo",
   "metadata": {
-    "name": "boxbox",
+    "name": "f1boxbox",
     "version": "0.1.0",
     "spec": "0.1.0",
     "description": "Created with Anchor"
