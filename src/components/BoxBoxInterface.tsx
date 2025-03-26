@@ -48,7 +48,7 @@ const formatNumber = (num: number): string => {
 
 const TransactionLink = ({ signature }: { signature: string }) => (
   <a
-    href={`https://solana.fm/tx/${signature}?cluster=devnet-alpha`}
+    href={`https://solana.fm/tx/${signature}?cluster=mainnet-alpha`}
     target="_blank"
     rel="noreferrer noopener"
     className="inline-flex items-center text-gray-50 transition-colors"
