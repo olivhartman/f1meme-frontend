@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback } from "react"
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
 import { Program, AnchorProvider, utils, setProvider } from "@coral-xyz/anchor"
-import { PublicKey, Connection } from "@solana/web3.js"
+import { PublicKey } from "@solana/web3.js"
 import idl from "../idl/boxbox.json"
 import type { F1boxbox } from "../types/boxbox"
 import BN from "bn.js"
@@ -57,6 +57,8 @@ const TransactionLink = ({ signature }: { signature: string }) => (
     <ExternalLinkIcon className="ml-1 h-4 w-4" />
   </a>
 )
+
+const QUICKNODE_WS_URL = 'https://special-autumn-meme.solana-devnet.quiknode.pro/aaabf36de63e76f2e8eceb52d37cce618894fdd5/';
 
 const BoxBoxInterface: React.FC = () => {
   const { connection } = useConnection()
@@ -152,7 +154,7 @@ const BoxBoxInterface: React.FC = () => {
   }
 
   const setupProgramSubscription = useCallback(async () => {
-    const ws = new WebSocket('wss://devnet.helius-rpc.com/?api-key=fb381146-ea31-4f74-8cb6-60ec5106e06c');
+    const ws = new WebSocket(QUICKNODE_WS_URL);
     let retryCount = 0;
     const MAX_RETRIES = 3;
     const RETRY_DELAY = 5000; // 5 seconds
@@ -178,14 +180,15 @@ const BoxBoxInterface: React.FC = () => {
 
     ws.onopen = () => {
         console.log('WebSocket Connected');
-        retryCount = 0; // Reset retry count on successful connection
+        retryCount = 0;
         sendSubscriptionRequest(ws);
         
+        // QuickNode doesn't require ping/pong, but we'll keep a longer interval just in case
         pingInterval = setInterval(() => {
             if (ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({ jsonrpc: "2.0", method: "ping" }));
             }
-        }, 30000);
+        }, 45000);
 
         updateTotalLockedTokens();
     };
