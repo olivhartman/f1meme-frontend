@@ -39,7 +39,7 @@ function WalletChangeListener() {
 
 // Wallet context wrapper component
 function WalletContextWrapper({ children }: { children: React.ReactNode }) {
-  const network = WalletAdapterNetwork.Devnet
+  const network = WalletAdapterNetwork.Mainnet
   const endpoint = useMemo(() => clusterApiUrl(network), [network])
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter({ network }), new TorusWalletAdapter()],
