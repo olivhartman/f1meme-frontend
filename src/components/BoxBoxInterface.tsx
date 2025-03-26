@@ -26,8 +26,8 @@ import { totalLockedTokensAtom } from "../atoms/totalLocked"
 //   isInitialized: boolean
 // }
 
-// const programID = new PublicKey("8pF5A2ocYykmv2MJhyRb4ZPG2d8CexsgvCECELgAetAh")
-const tokenMint = new PublicKey("H1TmoEgNoiFgUWh2BZpavyxzt7v3nrRDhbsGfWDKJdAk")
+// const programID = new PublicKey("GXD3XAfYGPwjCJWXNfcWhSevDdLRgh3qs9U2NURYNDgo")
+const tokenMint = new PublicKey("A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y")
 const MAX_ACTIVE_VAULTS = 99
 const idl_object = JSON.parse(JSON.stringify(idl))
 let NUMBER_OF_TX: number
