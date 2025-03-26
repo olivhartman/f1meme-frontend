@@ -417,57 +417,56 @@ useEffect(() => {
     if (balance < 0.00016) return setMessageWithType("You need 0.00016 SOL to create a vault. If you've added the SOL, disconnect and reconnect your wallet to proceed.", "info")
 
     try {
-
         ;[membershipAccountPda] = await PublicKey.findProgramAddressSync(
           [Buffer.from("membership_account"), wallet.publicKey.toBuffer()],
           program.programId,
         )
-      setMembershipAccount(membershipAccountPda)
+        setMembershipAccount(membershipAccountPda)
 
+        escrowTokenAccountPda = await utils.token.associatedAddress({
+          mint: tokenMint,
+          owner: membershipAccountPda,
+        })
 
-      escrowTokenAccountPda = await utils.token.associatedAddress({
-        mint: tokenMint,
-        owner: membershipAccountPda,
-      })
+        const escrowAccountInfo = await connection.getAccountInfo(escrowTokenAccountPda)
+        
+        if (!escrowAccountInfo) {
+            const tx = await program.methods
+              .initializeEscrowAccount()
+              .accountsPartial({
+                owner: wallet.publicKey,
+                mint: tokenMint,
+                membershipAccount: membershipAccountPda,
+                tokenProgram: utils.token.TOKEN_PROGRAM_ID,
+              })
+              .transaction()
 
+            // Send and confirm the transaction
+            const signature = await sendTransaction(tx, connection)
+            
+            // Wait for confirmation
+            const confirmation = await connection.confirmTransaction(signature, 'confirmed')
+            
+            if (confirmation.value.err) {
+                throw new Error('Transaction failed to confirm')
+            }
 
-      const escrowAccountInfo = await connection.getAccountInfo(escrowTokenAccountPda)
-      // console.log('escrow 2: ', escrowTokenAccountPda);
-      if (!escrowAccountInfo) {
-        const tx = await program.methods
-          .initializeEscrowAccount()
-          .accountsPartial({
-            owner: wallet.publicKey,
-            mint: tokenMint,
-            membershipAccount: membershipAccountPda,
-            // escrowTokenAccount: escrowTokenAccountPda,
-            tokenProgram: utils.token.TOKEN_PROGRAM_ID,
-          })
-          .transaction()
-
-          
-        // if (!isEscrowInitialized && connection && wallet) {
-          tx.feePayer = wallet.publicKey;
-          tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-
-          const signedTx = await wallet.signTransaction(tx);
-          await connection.sendRawTransaction(signedTx.serialize());
-          // console.log("Transaction confirmed:", txId);
-        // }
-      }
-      else {
-        setEscrowAccount(escrowTokenAccountPda)
-        setIsEscrowInitialized(true)
-      }
+            setEscrowAccount(escrowTokenAccountPda)
+            setIsEscrowInitialized(true)
+            // setMessageWithType("Vault created successfully!", "success", signature)
+        } else {
+            setEscrowAccount(escrowTokenAccountPda)
+            setIsEscrowInitialized(true)
+        }
     } catch (error) {
-      if (error?.toString().includes("User rejected the request")) {
-        setMessageWithType(`You rejected the request to create your vault`, "error")
-      }
-      else if (!error?.toString().includes("failed to get info about account")) {
-        setMessageWithType(`Error creating vault: ${error}`, "error")
-      }
+        if (error?.toString().includes("User rejected the request")) {
+            setMessageWithType(`You rejected the request to create your vault`, "error")
+        } else if (error?.toString().includes("blockhash not found")) {
+            setMessageWithType(`Transaction expired. Please try again.`, "error")
+        } else if (!error?.toString().includes("failed to get info about account")) {
+            setMessageWithType(`Error creating vault: ${error}`, "error")
+        }
     }
-    
   }
 
   const updateAccountInfo = async () => {
