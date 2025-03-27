@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/f1boxbox.json`.
  */
 export type F1boxbox = {
-  "address": "GXD3XAfYGPwjCJWXNfcWhSevDdLRgh3qs9U2NURYNDgo",
+  "address": "AdMkR6N759U4gDR16XmGfScZJJoQAHsYmeo8RvXJJDch",
   "metadata": {
     "name": "f1boxbox",
     "version": "0.1.0",
