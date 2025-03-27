@@ -10,7 +10,6 @@ import { ConnectionProvider, WalletProvider, useWallet } from "@solana/wallet-ad
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
 import { PhantomWalletAdapter, SolflareWalletAdapter, TorusWalletAdapter } from "@solana/wallet-adapter-wallets"
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
-import { clusterApiUrl } from "@solana/web3.js"
 import Loader from "./Loader"
 
 import "@solana/wallet-adapter-react-ui/styles.css"
@@ -40,7 +39,10 @@ function WalletChangeListener() {
 // Wallet context wrapper component
 function WalletContextWrapper({ children }: { children: React.ReactNode }) {
   const network = WalletAdapterNetwork.Mainnet
-  const endpoint = useMemo(() => clusterApiUrl(network), [network])
+  const endpoint = useMemo(() => 
+    'https://palpable-divine-county.solana-mainnet.quiknode.pro/80f0d4257ab466c51fd0f1125be90a1ccb2584d9/', 
+    []
+  )
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter({ network }), new TorusWalletAdapter()],
     [network],
