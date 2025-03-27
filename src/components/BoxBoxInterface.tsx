@@ -26,7 +26,7 @@ import { totalLockedTokensAtom } from "../atoms/totalLocked"
 //   isInitialized: boolean
 // }
 
-// const programID = new PublicKey("GXD3XAfYGPwjCJWXNfcWhSevDdLRgh3qs9U2NURYNDgo")
+// const programID = new PublicKey("AdMkR6N759U4gDR16XmGfScZJJoQAHsYmeo8RvXJJDch")
 const tokenMint = new PublicKey("A5D4sQ3gWgM7QHFRyo3ZavKa9jMjkfHSNR6rX5TNJB8y")
 const MAX_ACTIVE_VAULTS = 99
 const idl_object = JSON.parse(JSON.stringify(idl))
@@ -58,7 +58,7 @@ const TransactionLink = ({ signature }: { signature: string }) => (
   </a>
 )
 
-const QUICKNODE_WS_URL = 'https://palpable-divine-county.solana-mainnet.quiknode.pro/80f0d4257ab466c51fd0f1125be90a1ccb2584d9/';
+const QUICKNODE_WS_URL = 'wss://palpable-divine-county.solana-mainnet.quiknode.pro/80f0d4257ab466c51fd0f1125be90a1ccb2584d9/';
 
 const BoxBoxInterface: React.FC = () => {
   const { connection } = useConnection()
