@@ -100,10 +100,10 @@ export default function Hero() {
     seconds: 0,
   })
   const [newsItems, setNewsItems] = useState<string[]>([
-    "Max Verstappen dominates in qualifying 🏎️",
-    "Ferrari showing strong pace in practice 🔥",
-    "Mercedes brings major upgrades to next race 🔧",
-    "Exciting battle for midfield positions 🏁",
+    "Yuki Tsunoda Racing in Red Bull in front Japanese Crowd 🏎️",
+    "Maclaren Big Lead in both Championship, is it a bad sign?🔥",
+    "Kimi winning his first Grand Prix soon 🔧",
+    "Over 220,000 attendance in Chinese Grand Prix 🏁",
   ])
   const [nextRace, setNextRace] = useState<NextRaceInfo>({
     date: "2025-04-06",
