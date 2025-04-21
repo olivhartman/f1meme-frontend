@@ -341,7 +341,7 @@ export default function Hero() {
           >
             <div>
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight leading-none mb-4 sm:mb-6 bg-gradient-to-r from-white to-yellow-500 bg-clip-text text-transparent">
-                LATEST RACE
+                Saudi Grand Prix
               </h1>
               {/* <div className="flex items-center gap-4">
                 <div className="h-1 w-24 bg-gradient-to-r from-yellow-500 to-yellow-300" />
