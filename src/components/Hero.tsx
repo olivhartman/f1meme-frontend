@@ -51,7 +51,7 @@ interface CachedData {
 
 export default function Hero() {
   const [previousRace, setPreviousRace] = useState<RaceResults>({
-    raceName: "2024 Championship Standings",
+    raceName: "2025 Championship Standings",
     Results: [
       {
         position: "1",
@@ -106,10 +106,10 @@ export default function Hero() {
     "Over 220,000 attendance in Chinese Grand Prix 🏁",
   ])
   const [nextRace, setNextRace] = useState<NextRaceInfo>({
-    date: "2025-04-06",
-    time: "06:00:00",
-    raceName: "FORMULA 1 LENOVO JAPANESE GRAND PRIX 2025",
-    circuit: "FORMULA 1 LENOVO JAPANESE GRAND PRIX 2025",
+    date: "2025-05-02",
+    time: "04:00:00",
+    raceName: "FORMULA 1 CRYPTO.COM MIAMI GRAND PRIX 2025",
+    circuit: "Hard Rock Stadium",
   })
   const [player, setPlayer] = useState<any>(null)
   const [seasonInfo, setSeasonInfo] = useState<SeasonInfo>({
